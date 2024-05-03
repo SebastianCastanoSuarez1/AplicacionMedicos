@@ -13,5 +13,14 @@ public class Controller {
 		Optional<Document> paciente = pacienteRepositoryImpl.findById(dni);
 		return paciente;
 	}
-	
+
+	public Boolean existdni(String dni) {
+		Optional<Document> paciente = pacienteRepositoryImpl.findById(dni);
+		return paciente.isPresent();
+	}
+
+	public Boolean savePaciente(Document paciente) {
+		return pacienteRepositoryImpl.save(paciente);
+	}
+
 }
