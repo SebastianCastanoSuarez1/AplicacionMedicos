@@ -13,6 +13,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.DeleteResult;
 
@@ -47,7 +48,6 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		return documentList;
 	}
 
-
 	@Override
 	public Boolean save(Document entity) {
 		try {
@@ -58,6 +58,7 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			return false;
 		}
 	}
+
 	@Override
 	public Optional<Document> findById(String id) {
 		Bson filter = eq(dni, id);
@@ -67,23 +68,24 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 	}
 
 	public List<Document> findByNombre(String nombre) {
-		
+
 		Bson filter = eq("Nombre", nombre);
 		Bson projectionFields = Projections.excludeId();
-		
+
 		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
 		return results;
 	}
+
 	@Override
 	public DeleteResult delete(String dni) {
-	    DeleteResult resultado = null;
-	    try {
-	        Bson filter = eq("Dni", dni);
-	        resultado = collection.deleteOne(filter);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return resultado;
+		DeleteResult resultado = null;
+		try {
+			Bson filter = eq("Dni", dni);
+			resultado = collection.deleteOne(filter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultado;
 	}
 
 	public Boolean updateHistorialMedico(Optional<Document> paciente, Document historial) {
@@ -101,7 +103,8 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			e.printStackTrace();
 			return false;
 		}
-	}	
+	}
+
 	public Boolean update(Optional<Document> paciente, String atributo, List<String> valores) {
 		try {
 			if (paciente.isPresent()) {
@@ -117,10 +120,10 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			return false;
 		}
 	}
-	
+
 	public Boolean update(Optional<Document> paciente, String atributo, String valor) {
 		try {
-			
+
 			if (paciente.isPresent()) {
 				Document filter = paciente.get(); // filtro para seleccionar el documento a actualizar
 				Document update = new Document("$set", new Document(atributo, valor));
@@ -134,11 +137,12 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			return false;
 		}
 	}
+
 	public Boolean update(Optional<Document> paciente, String atributo, Document valores) {
 		try {
 			if (paciente.isPresent()) {
 				Document filter = paciente.get();
-				Document update = new Document("$set", new Document(atributo ,valores));
+				Document update = new Document("$set", new Document(atributo, valores));
 				collection.updateOne(filter, update);
 				return true;
 			} else {
@@ -155,6 +159,13 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		Bson projectionFields = Projections.excludeId();
 		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
 		return results;
+	}
+
+	public Optional<Document> findByUsernameAndPassword(String username, String password) {
+	    Bson filter = Filters.and(Filters.eq("Dni", username), Filters.eq("Contraseña", password));
+	    Bson projectionFields = Projections.excludeId();
+	    Document result = collection.find(filter).projection(projectionFields).first();
+	    return Optional.ofNullable(result);
 	}
 
 

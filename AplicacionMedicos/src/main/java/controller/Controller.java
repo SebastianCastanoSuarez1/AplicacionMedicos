@@ -22,5 +22,10 @@ public class Controller {
 	public Boolean savePaciente(Document paciente) {
 		return pacienteRepositoryImpl.save(paciente);
 	}
+	
+	public Boolean authenticateUser(String username, String password) {
+	    Optional<Document> user = pacienteRepositoryImpl.findByUsernameAndPassword(username, password);
+	    return user.isPresent();
+	}
 
 }
