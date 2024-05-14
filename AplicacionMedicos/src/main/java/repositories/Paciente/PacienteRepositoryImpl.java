@@ -88,23 +88,6 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		return resultado;
 	}
 
-	public Boolean updateHistorialMedico(Optional<Document> paciente, Document historial) {
-		try {
-
-			if (paciente.isPresent()) {
-				Document filter = paciente.get(); // filtro para seleccionar el documento a actualizar
-				Document update = new Document("$set", new Document(historial));
-				collection.updateOne(filter, update);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 	public Boolean update(Optional<Document> paciente, String atributo, List<String> valores) {
 		try {
 			if (paciente.isPresent()) {
@@ -154,6 +137,21 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		}
 	}
 
+	public boolean updateAllData(Optional<Document> paciente, Document newData) {
+		try {
+			if (paciente.isPresent()) {
+				Document filter = paciente.get();
+				collection.replaceOne(filter, newData);
+				return true;
+			} else {
+				return false; // No se encontró el documento
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false; // Error al actualizar
+		}
+	}
+
 	public List<Document> findByAttribute(String atributo, String valor) {
 		Bson filter = eq(atributo, valor);
 		Bson projectionFields = Projections.excludeId();
@@ -162,11 +160,10 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 	}
 
 	public Optional<Document> findByUsernameAndPassword(String username, String password) {
-	    Bson filter = Filters.and(Filters.eq("Dni", username), Filters.eq("Contraseña", password));
-	    Bson projectionFields = Projections.excludeId();
-	    Document result = collection.find(filter).projection(projectionFields).first();
-	    return Optional.ofNullable(result);
+		Bson filter = Filters.and(Filters.eq("Dni", username), Filters.eq("Contraseña", password));
+		Bson projectionFields = Projections.excludeId();
+		Document result = collection.find(filter).projection(projectionFields).first();
+		return Optional.ofNullable(result);
 	}
-
 
 }

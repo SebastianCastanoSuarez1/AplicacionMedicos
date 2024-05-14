@@ -27,5 +27,10 @@ public class Controller {
 	    Optional<Document> user = pacienteRepositoryImpl.findByUsernameAndPassword(username, password);
 	    return user.isPresent();
 	}
+	public Boolean updateData(String dni, Document newData) {
+		Optional<Document> paciente=pacienteRepositoryImpl.findById(dni);
+		return pacienteRepositoryImpl.updateAllData(paciente, newData);
+	}
+	
 
 }

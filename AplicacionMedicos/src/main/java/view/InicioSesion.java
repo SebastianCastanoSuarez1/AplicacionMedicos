@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -48,7 +47,6 @@ public class InicioSesion extends JFrame {
 	public InicioSesion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 456);
-
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
@@ -76,7 +74,7 @@ public class InicioSesion extends JFrame {
 		contentPane.add(passwordField);
 
 		showPasswordButton = new JToggleButton("Mostrar contraseña");
-		showPasswordButton.setBounds(411, 150, 121, 30);
+		showPasswordButton.setBounds(418, 149, 121, 30);
 		contentPane.add(showPasswordButton);
 
 		showPasswordButton.addActionListener(new ActionListener() {
@@ -114,7 +112,8 @@ public class InicioSesion extends JFrame {
 				String password = new String(passwordField.getPassword());
 
 				if (controller.existdni(username) && controller.authenticateUser(username, password)) {
-					ventanaPrincipal = new VentanaPrincipal();
+
+					ventanaPrincipal = new VentanaPrincipal(username);
 					ventanaPrincipal.setVisible(true);
 					dispose();
 				} else {

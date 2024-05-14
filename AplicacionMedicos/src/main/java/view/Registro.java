@@ -142,7 +142,7 @@ public class Registro extends JFrame {
 					Boolean anadido;
 					Document paciente = new Paciente().append("Dni", dniformated.getText())
 							.append("Nombre", nameTxtField.getText()).append("Apellidos", SurnameTxtField.getText())
-							.append("FechaNacimiento", bodformated.getText())
+							.append("Fecha_Nacimiento", bodformated.getText())
 							.append("Sexo", GendercomboBox.getSelectedItem().toString())
 							.append("Contraseña", PasswdTxtField.getText());
 					if (!controller.existdni(dniformated.getText())) {
@@ -151,7 +151,7 @@ public class Registro extends JFrame {
 							JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente", "Confirmación",
 									JOptionPane.INFORMATION_MESSAGE);
 							dispose();
-							InicioSesion inicioSesion = new InicioSesion();
+							inicioSesion = new InicioSesion();
 							inicioSesion.setVisible(true);
 						} else {
 							mostrarMensaje("Tu cuenta no ha sido creada", Color.RED);
@@ -165,7 +165,7 @@ public class Registro extends JFrame {
 			private void mostrarMensaje(String mensaje, Color color) {
 				finalMesgLbl.setText(mensaje);
 				finalMesgLbl.setForeground(color);
-				timer.restart(); // Reiniciar el temporizador
+				timer.restart();
 			}
 		});
 		btnNewButton.setEnabled(false);
@@ -196,7 +196,6 @@ public class Registro extends JFrame {
 			e.printStackTrace();
 		}
 
-		// Configuración del temporizador
 		timer = new javax.swing.Timer(8000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
