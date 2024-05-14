@@ -152,6 +152,22 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		}
 	}
 
+	public boolean updatePartialData(Optional<Document> paciente, Document newData) {
+		try {
+			if (paciente.isPresent()) {
+				Document filter = paciente.get();
+				Document update = new Document("$set", newData);
+				collection.updateOne(filter, update);
+				return true;
+			} else {
+				return false; // No se encontró el documento
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false; // Error al actualizar
+		}
+	}
+
 	public List<Document> findByAttribute(String atributo, String valor) {
 		Bson filter = eq(atributo, valor);
 		Bson projectionFields = Projections.excludeId();
