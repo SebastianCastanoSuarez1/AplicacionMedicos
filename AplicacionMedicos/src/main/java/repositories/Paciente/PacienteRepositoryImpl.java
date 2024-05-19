@@ -15,7 +15,9 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 
 import db.MongoDB;
 
@@ -141,18 +143,18 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		try {
 			if (paciente.isPresent()) {
 				Document filter = paciente.get();
-				collection.replaceOne(filter, newData);
+				collection.updateOne(filter, newData);
 				return true;
 			} else {
-				return false; // No se encontró el documento
+				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false; // Error al actualizar
+			return false;
 		}
 	}
 
-	public boolean updatePartialData(Optional<Document> paciente, Document newData) {
+	public Boolean updatePartialData(Optional<Document> paciente, Document newData) {
 		try {
 			if (paciente.isPresent()) {
 				Document filter = paciente.get();
@@ -167,6 +169,37 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			return false; // Error al actualizar
 		}
 	}
+
+	public Boolean replaceDocument(Optional<Document> optionalOldDocument, Document newDocument) {
+	    try {
+	        if (optionalOldDocument.isPresent()) {
+	            Document oldDocument = optionalOldDocument.get();
+
+	            // Iterar sobre las claves del nuevo documento
+	            for (String key : newDocument.keySet()) {
+	                // Obtener el valor correspondiente en el nuevo documento
+	                Object newValue = newDocument.get(key);
+	                
+	                // Verificar si el campo existe en el documento anterior
+	                if (oldDocument.containsKey(key)) {
+	                    // Si existe, actualizar su valor en el documento anterior
+	                    oldDocument.put(key, newValue);
+	                }
+	            }
+
+	            // Reemplazar el documento anterior con el documento actualizado
+	            collection.replaceOne(eq("Dni", oldDocument.getString("Dni")), oldDocument);
+	            return true;
+	        } else {
+	            return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+
 
 	public List<Document> findByAttribute(String atributo, String valor) {
 		Bson filter = eq(atributo, valor);

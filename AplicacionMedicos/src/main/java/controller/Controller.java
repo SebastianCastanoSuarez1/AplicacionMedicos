@@ -28,8 +28,8 @@ public class Controller {
 	    return user.isPresent();
 	}
 	public Boolean updateData(String dni, Document newData) {
-		Optional<Document> paciente=pacienteRepositoryImpl.findById(dni);
-		return pacienteRepositoryImpl.updateAllData(paciente, newData);
+	    Optional<Document> paciente = pacienteRepositoryImpl.findById(dni);
+	    return paciente.map(p -> pacienteRepositoryImpl.replaceDocument(paciente, newData)).orElse(false);
 	}
 	
 

@@ -8,12 +8,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 import controller.Controller;
+import java.awt.Color;
 
 public class InicioSesion extends JFrame {
 
@@ -23,7 +26,7 @@ public class InicioSesion extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
-	private JToggleButton showPasswordButton;
+	private JRadioButton showPasswordButton;
 	private JLabel usernameLabel;
 
 	private Registro registro;
@@ -48,6 +51,7 @@ public class InicioSesion extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 456);
 		JPanel contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 
@@ -73,7 +77,8 @@ public class InicioSesion extends JFrame {
 		passwordField.setBounds(200, 150, 200, 30);
 		contentPane.add(passwordField);
 
-		showPasswordButton = new JToggleButton("Mostrar contraseña");
+		showPasswordButton = new JRadioButton("Mostrar contraseña");
+		showPasswordButton.setContentAreaFilled(false);
 		showPasswordButton.setBounds(418, 149, 121, 30);
 		contentPane.add(showPasswordButton);
 
@@ -90,12 +95,12 @@ public class InicioSesion extends JFrame {
 
 		JButton loginButton = new JButton("Iniciar Sesión");
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		loginButton.setBounds(290, 217, 150, 40);
+		loginButton.setBounds(294, 269, 150, 40);
 		contentPane.add(loginButton);
 
 		JButton registerButton = new JButton("Registrarse");
 		registerButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		registerButton.setBounds(134, 217, 121, 40);
+		registerButton.setBounds(139, 269, 121, 40);
 		contentPane.add(registerButton);
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -112,11 +117,14 @@ public class InicioSesion extends JFrame {
 				String password = new String(passwordField.getPassword());
 
 				if (controller.existdni(username) && controller.authenticateUser(username, password)) {
-
 					ventanaPrincipal = new VentanaPrincipal(username);
 					ventanaPrincipal.setVisible(true);
 					dispose();
+				} else if (controller.existdni(username)) {
+					JOptionPane.showMessageDialog(InicioSesion.this,
+							"El usuario " + username + " existe pero la contraseña es incorrecta");
 				} else {
+					JOptionPane.showMessageDialog(InicioSesion.this, "El usuario " + username + " no existe");
 				}
 			}
 		});
