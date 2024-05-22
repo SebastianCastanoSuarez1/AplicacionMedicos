@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.bson.Document;
 
+import com.mongodb.client.result.DeleteResult;
+
 import repositories.Paciente.PacienteRepositoryImpl;
 
 public class Controller {
@@ -22,15 +24,23 @@ public class Controller {
 	public Boolean savePaciente(Document paciente) {
 		return pacienteRepositoryImpl.save(paciente);
 	}
-	
+
 	public Boolean authenticateUser(String username, String password) {
-	    Optional<Document> user = pacienteRepositoryImpl.findByUsernameAndPassword(username, password);
-	    return user.isPresent();
+		Optional<Document> user = pacienteRepositoryImpl.findByUsernameAndPassword(username, password);
+		return user.isPresent();
 	}
+
 	public Boolean updateData(String dni, Document newData) {
-	    Optional<Document> paciente = pacienteRepositoryImpl.findById(dni);
-	    return paciente.map(p -> pacienteRepositoryImpl.replaceDocument(paciente, newData)).orElse(false);
+		Optional<Document> paciente = pacienteRepositoryImpl.findById(dni);
+		return paciente.map(p -> pacienteRepositoryImpl.replaceDocument(paciente, newData)).orElse(false);
 	}
-	
+
+	public Boolean actualizarContraseña(Optional<Document> medicos, String atributo, String contraseña) {
+		return pacienteRepositoryImpl.update(medicos, atributo, contraseña);
+	}
+
+	public DeleteResult eliminarPaciente(String dni) {
+		return pacienteRepositoryImpl.delete(dni);
+	}
 
 }

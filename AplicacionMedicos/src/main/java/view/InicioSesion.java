@@ -1,9 +1,11 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,24 +15,19 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 
 import controller.Controller;
-import java.awt.Color;
 
 public class InicioSesion extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
-	private JRadioButton showPasswordButton;
 	private JLabel usernameLabel;
 
 	private Registro registro;
 	private VentanaPrincipal ventanaPrincipal;
+	private CambiarContrasena cambiarContrasena;
 
 	private final Controller controller = new Controller();
 
@@ -61,10 +58,6 @@ public class InicioSesion extends JFrame {
 		contentPane.add(usernameLabel);
 
 		usernameField = new JTextField();
-		usernameField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		usernameField.setBounds(200, 100, 200, 30);
 		contentPane.add(usernameField);
 
@@ -77,19 +70,16 @@ public class InicioSesion extends JFrame {
 		passwordField.setBounds(200, 150, 200, 30);
 		contentPane.add(passwordField);
 
-		showPasswordButton = new JRadioButton("Mostrar contraseña");
+		JRadioButton showPasswordButton = new JRadioButton("Mostrar contraseña");
 		showPasswordButton.setContentAreaFilled(false);
 		showPasswordButton.setBounds(418, 149, 121, 30);
 		contentPane.add(showPasswordButton);
 
-		showPasswordButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (showPasswordButton.isSelected()) {
-					passwordField.setEchoChar((char) 0);
-				} else {
-					passwordField.setEchoChar('\u2022');
-				}
+		showPasswordButton.addActionListener(e -> {
+			if (showPasswordButton.isSelected()) {
+				passwordField.setEchoChar((char) 0);
+			} else {
+				passwordField.setEchoChar('\u2022');
 			}
 		});
 
@@ -102,30 +92,51 @@ public class InicioSesion extends JFrame {
 		registerButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		registerButton.setBounds(139, 269, 121, 40);
 		contentPane.add(registerButton);
-		registerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				registro = new Registro();
-				registro.setVisible(true);
+		registerButton.addActionListener(e -> {
+			registro = new Registro();
+			registro.setVisible(true);
+			dispose();
+		});
+
+		JLabel cambiarContrasenaLabel = new JLabel("Cambiar Contraseña");
+		cambiarContrasenaLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		cambiarContrasenaLabel.setForeground(Color.BLUE);
+		cambiarContrasenaLabel.setBounds(200, 186, 200, 21);
+		cambiarContrasenaLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		contentPane.add(cambiarContrasenaLabel);
+
+		cambiarContrasenaLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cambiarContrasena = new CambiarContrasena();
+				cambiarContrasena.setVisible(true);
 				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				cambiarContrasenaLabel.setText("<html><u>Cambiar Contraseña</u></html>");
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarContrasenaLabel.setText("Cambiar Contraseña");
 			}
 		});
 
-		loginButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String username = usernameField.getText();
-				String password = new String(passwordField.getPassword());
+		loginButton.addActionListener(e -> {
+			String username = usernameField.getText();
+			String password = new String(passwordField.getPassword());
 
-				if (controller.existdni(username) && controller.authenticateUser(username, password)) {
-					ventanaPrincipal = new VentanaPrincipal(username);
-					ventanaPrincipal.setVisible(true);
-					dispose();
-				} else if (controller.existdni(username)) {
-					JOptionPane.showMessageDialog(InicioSesion.this,
-							"El usuario " + username + " existe pero la contraseña es incorrecta");
-				} else {
-					JOptionPane.showMessageDialog(InicioSesion.this, "El usuario " + username + " no existe");
-				}
+			if (controller.existdni(username) && controller.authenticateUser(username, password)) {
+				ventanaPrincipal = new VentanaPrincipal(username);
+				ventanaPrincipal.setVisible(true);
+				dispose();
+			} else if (controller.existdni(username)) {
+				JOptionPane.showMessageDialog(InicioSesion.this,
+						"El usuario " + username + " existe pero la contraseña es incorrecta");
+			} else {
+				JOptionPane.showMessageDialog(InicioSesion.this, "El usuario " + username + " no existe");
 			}
 		});
 	}

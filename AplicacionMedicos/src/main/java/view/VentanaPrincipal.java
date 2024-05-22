@@ -10,13 +10,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 
 public class VentanaPrincipal extends JFrame {
@@ -25,7 +25,10 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel contentPane;
 	private VentanaCitas ventanaCitas;
 	static String dni;
+
 	private VentanaEditarPerfil vEditarPerfil;
+	private CerrarSesion cerrarSesion;
+	private VentanaTarjetaMedica ventanaTarjetaMedica;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -50,18 +53,6 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JButton btnPedirCita = new JButton("Citas");
-		btnPedirCita.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnPedirCita.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ventanaCitas = new VentanaCitas(dni);
-				ventanaCitas.setVisible(true);
-				dispose();
-			}
-		});
-		btnPedirCita.setBounds(233, 161, 100, 36);
-		contentPane.add(btnPedirCita);
-
 		ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
 		Image img = logo.getImage();
 		Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
@@ -79,19 +70,13 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 
-		JMenuItem btnMenu = new JMenuItem("Menú");
-		btnMenu.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnMenu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mostrarMenu();
-			}
-		});
-		btnMenu.setBounds(123, 161, 100, 36);
-		contentPane.add(btnMenu);
-	}
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 161, 600, 22);
+		contentPane.add(menuBar);
 
-	private void mostrarMenu() {
-		JPopupMenu menu = new JPopupMenu();
+		JMenu menuPerfil = new JMenu("Perfil");
+		menuPerfil.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		menuBar.add(menuPerfil);
 
 		JMenuItem menuItemEditarPerfil = new JMenuItem("Editar perfil");
 		menuItemEditarPerfil.addActionListener(new ActionListener() {
@@ -101,7 +86,7 @@ public class VentanaPrincipal extends JFrame {
 				dispose();
 			}
 		});
-		menu.add(menuItemEditarPerfil);
+		menuPerfil.add(menuItemEditarPerfil);
 
 		JMenuItem menuItemConfiguracion = new JMenuItem("Configuración");
 		menuItemConfiguracion.addActionListener(new ActionListener() {
@@ -109,22 +94,58 @@ public class VentanaPrincipal extends JFrame {
 				JOptionPane.showMessageDialog(VentanaPrincipal.this, "Opción de Configuración seleccionada");
 			}
 		});
-		menu.add(menuItemConfiguracion);
+		menuPerfil.add(menuItemConfiguracion);
 
 		JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar Sesión");
 		menuItemCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(VentanaPrincipal.this, "Sesión cerrada");
+				cerrarSesion = new CerrarSesion(dni);
+				cerrarSesion.setVisible(true);
+				dispose();
 			}
 		});
-		menu.add(menuItemCerrarSesion);
+		menuPerfil.add(menuItemCerrarSesion);
 
-		menu.show(contentPane, 50, 252);
+		JMenuItem menuItemDarseDeBaja = new JMenuItem("Darse de baja");
+		menuPerfil.add(menuItemDarseDeBaja);
+
+		JMenu menuCita = new JMenu("Cita");
+		menuCita.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		menuBar.add(menuCita);
+
+		JMenuItem menuItemPedirCita = new JMenuItem("Pedir Cita");
+		menuItemPedirCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ventanaCitas = new VentanaCitas(dni);
+				ventanaCitas.setVisible(true);
+				dispose();
+			}
+		});
+		menuCita.add(menuItemPedirCita);
+
+		JMenu menuHistorial = new JMenu("Historial");
+		menuHistorial.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		menuBar.add(menuHistorial);
+
+		JMenuItem menuItemVerHistorial = new JMenuItem("Ver Historial");
+		menuHistorial.add(menuItemVerHistorial);
+
+		JMenu tarjetaMedicaJMenu = new JMenu("Tarjeta medica");
+		menuBar.add(tarjetaMedicaJMenu);
+
+		JMenuItem medicamentos = new JMenuItem("Ver medicamentos");
+		medicamentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ventanaTarjetaMedica = new VentanaTarjetaMedica(dni);
+				ventanaTarjetaMedica.setVisible(true);
+				dispose();
+			}
+		});
+		tarjetaMedicaJMenu.add(medicamentos);
 	}
 
-	// Método para volver a la ventana principal
 	private void volverAVentanaPrincipal() {
-		VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni); // Crea una nueva instancia de VentanaPrincipal
+		VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
 		ventanaPrincipal.setVisible(true);
 		dispose();
 	}
