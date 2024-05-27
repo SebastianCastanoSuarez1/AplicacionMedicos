@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-
-import org.bson.Document;
 
 import controller.Controller;
 
@@ -28,26 +24,26 @@ public class VentanaTarjetaMedica extends JFrame {
 	private JButton btnCancelar;
 	private VentanaPrincipal principal;
 
-	private List<String> medicamentos;
+	private String[] medicamentos;
 	static String dni;
 
 	private Controller controller = new Controller();
 
 	public VentanaTarjetaMedica(String dni) {
 		VentanaTarjetaMedica.dni = dni;
-		this.medicamentos = cargarMedicamentos(dni);
+		this.medicamentos = controller.medicamentos(dni);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(230, 230, 250));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		lblNewLabel = new JLabel("Medicamentos de los pacientes");
+		lblNewLabel = new JLabel("Medicamentos disponibles en tu tarjeta médica\r\n");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(24, 20, 202, 37);
+		lblNewLabel.setBounds(24, 20, 311, 37);
 		contentPane.add(lblNewLabel);
 
 		scrollPane = new JScrollPane();
@@ -80,15 +76,6 @@ public class VentanaTarjetaMedica extends JFrame {
 			}
 		});
 		contentPane.add(btnCancelar);
-	}
-
-	public List<String> cargarMedicamentos(String dni) {
-		Optional<Document> documento = controller.findByDni(dni);
-		if (documento.isPresent()) {
-			Document paciente = documento.get();
-			return (List<String>) paciente.get("Tarjeta_Medica");
-		}
-		return List.of();
 	}
 
 	public static void main(String[] args) {

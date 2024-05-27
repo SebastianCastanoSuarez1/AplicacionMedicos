@@ -145,6 +145,118 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		return medicamentos.toArray(new String[0]);
 	}
 
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findFecha(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Enfermedades");
+		ArrayList<String> fecha = new ArrayList<>();
+
+		for (Document obj : enfermedades) {
+			if (obj.containsKey("Fecha")) {
+				fecha.add(obj.getString("Fecha"));
+			}
+		}
+
+		return fecha;
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findTratamiento(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Enfermedades");
+		ArrayList<String> tratamiento = new ArrayList<>();
+
+		for (Document obj1 : enfermedades) {
+			if (obj1.containsKey("Detalles")) {
+				Document obj2 = (Document) obj1.get("Detalles");
+				if (obj2.containsKey("Tratamiento")) {
+					tratamiento.add(obj2.getString("Tratamiento"));
+				}
+			}
+		}
+
+		return tratamiento;
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findInforme(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Enfermedades");
+		ArrayList<String> informe = new ArrayList<>();
+
+		for (Document obj1 : enfermedades) {
+			if (obj1.containsKey("Detalles")) {
+				Document obj2 = (Document) obj1.get("Detalles");
+				if (obj2.containsKey("Informe")) {
+					informe.add(obj2.getString("Informe"));
+				}
+			}
+		}
+
+		return informe;
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<ArrayList<String>> findMedicamentosTratamiento(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		if (document == null) {
+			return new ArrayList<>();
+		}
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Enfermedades");
+		ArrayList<ArrayList<String>> medicamentos = new ArrayList<>();
+
+		for (Document obj1 : enfermedades) {
+			if (obj1.containsKey("Detalles")) {
+				Document obj2 = (Document) obj1.get("Detalles");
+				if (obj2.containsKey("Medicamentos")) {
+					ArrayList<String> medicamento = (ArrayList<String>) obj2.get("Medicamentos");
+					medicamentos.add(new ArrayList<>(medicamento));
+				} else {
+					medicamentos.add(new ArrayList<>());
+				}
+			} else {
+				medicamentos.add(new ArrayList<>());
+			}
+		}
+
+		return medicamentos;
+	}
+
+	@SuppressWarnings("unchecked")
+	public String[] findAlergenos(String medico) {
+		Bson filter = eq(dni, medico);
+		Document result = collection.find(filter).first();
+		List<String> alergenos = (List<String>) result.get("Alergenos");
+		return alergenos.toArray(new String[0]);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findEnfermedad(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedadesLista = (ArrayList<Document>) document.get("Enfermedades");
+		ArrayList<String> enfermedades = new ArrayList<>();
+
+		for (Document obj : enfermedadesLista) {
+			if (obj.containsKey("Enfermedad")) {
+				enfermedades.add(obj.getString("Enfermedad"));
+			}
+		}
+
+		return enfermedades;
+	}
+
 	public Boolean updatePartialData(Optional<Document> paciente, Document newData) {
 		try {
 			if (paciente.isPresent()) {

@@ -29,6 +29,7 @@ public class VentanaPrincipal extends JFrame {
 	private VentanaEditarPerfil vEditarPerfil;
 	private CerrarSesion cerrarSesion;
 	private VentanaTarjetaMedica ventanaTarjetaMedica;
+	private VentanaHistorialMedico ventanaHistorialMedico;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -128,6 +129,13 @@ public class VentanaPrincipal extends JFrame {
 		menuBar.add(menuHistorial);
 
 		JMenuItem menuItemVerHistorial = new JMenuItem("Ver Historial");
+		menuItemVerHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ventanaHistorialMedico = new VentanaHistorialMedico(dni);
+				ventanaHistorialMedico.setVisible(true);
+				dispose();
+			}
+		});
 		menuHistorial.add(menuItemVerHistorial);
 
 		JMenu tarjetaMedicaJMenu = new JMenu("Tarjeta medica");
