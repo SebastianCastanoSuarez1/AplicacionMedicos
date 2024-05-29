@@ -23,13 +23,14 @@ public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private VentanaCitas ventanaCitas;
+	private VentanaPedirCitas ventanaCitas;
 	static String dni;
 
 	private VentanaEditarPerfil vEditarPerfil;
 	private CerrarSesion cerrarSesion;
 	private VentanaTarjetaMedica ventanaTarjetaMedica;
 	private VentanaHistorialMedico ventanaHistorialMedico;
+	private VerInformes verInformes;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -117,7 +118,7 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem menuItemPedirCita = new JMenuItem("Pedir Cita");
 		menuItemPedirCita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ventanaCitas = new VentanaCitas(dni);
+				ventanaCitas = new VentanaPedirCitas(dni);
 				ventanaCitas.setVisible(true);
 				dispose();
 			}
@@ -150,6 +151,19 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		tarjetaMedicaJMenu.add(medicamentos);
+
+		JMenu MenuInformes = new JMenu("Informes\r\n");
+		menuBar.add(MenuInformes);
+
+		JMenuItem mntmNewMenuItem = new JMenuItem("Ver informes\r\n");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				verInformes = new VerInformes(dni);
+				verInformes.setVisible(true);
+				dispose();
+			}
+		});
+		MenuInformes.add(mntmNewMenuItem);
 	}
 
 	private void volverAVentanaPrincipal() {

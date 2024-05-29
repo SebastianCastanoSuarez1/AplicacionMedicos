@@ -34,7 +34,7 @@ public class VentanaEditarPerfil extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private VentanaCitas ventanaCitas;
+	private VentanaPedirCitas ventanaCitas;
 	static String dni;
 	private JTextField textFieldNombre;
 	private JTextField textFieldDni;

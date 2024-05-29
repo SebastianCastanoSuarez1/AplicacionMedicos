@@ -6,25 +6,27 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 import controller.Controller;
 
 public class InicioSesion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField usernameField;
 	private JPasswordField passwordField;
 	private JLabel usernameLabel;
-
+	private MaskFormatter mascara;
+	JFormattedTextField formattedDni;
 	private Registro registro;
 	private VentanaPrincipal ventanaPrincipal;
 	private CambiarContrasena cambiarContrasena;
@@ -56,10 +58,6 @@ public class InicioSesion extends JFrame {
 		usernameLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		usernameLabel.setBounds(132, 100, 100, 30);
 		contentPane.add(usernameLabel);
-
-		usernameField = new JTextField();
-		usernameField.setBounds(200, 100, 200, 30);
-		contentPane.add(usernameField);
 
 		JLabel passwordLabel = new JLabel("Contraseña:");
 		passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -105,6 +103,17 @@ public class InicioSesion extends JFrame {
 		cambiarContrasenaLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		contentPane.add(cambiarContrasenaLabel);
 
+		try {
+			mascara = new MaskFormatter("########?");
+			mascara.setValidCharacters("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			formattedDni = new JFormattedTextField(mascara);
+			formattedDni.setBounds(200, 104, 200, 27);
+			contentPane.add(formattedDni);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		cambiarContrasenaLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -125,7 +134,7 @@ public class InicioSesion extends JFrame {
 		});
 
 		loginButton.addActionListener(e -> {
-			String username = usernameField.getText();
+			String username = formattedDni.getText();
 			String password = new String(passwordField.getPassword());
 
 			if (controller.existdni(username) && controller.authenticateUser(username, password)) {

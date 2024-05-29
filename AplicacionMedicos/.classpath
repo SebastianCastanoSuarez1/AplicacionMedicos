@@ -52,7 +52,8 @@
 			<attribute name="m2e-apt" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/FX506LI/Downloads/jcalendar-1.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/FX506LI/Downloads/DateChooser.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/FX506LI/Downloads/jcalendar-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/FX506LI/Downloads/DateChooser.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/FX506LI/Desktop/ComponenteHoras.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

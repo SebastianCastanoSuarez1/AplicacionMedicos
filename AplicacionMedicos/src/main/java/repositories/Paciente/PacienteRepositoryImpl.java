@@ -15,6 +15,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 
 import db.MongoDB;
@@ -270,6 +271,21 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false; // Error al actualizar
+		}
+	}
+
+	public Boolean updateCitas(Optional<Document> paciente, String atributo, Document cita) {
+		try {
+			if (paciente.isPresent()) {
+				Document filter = paciente.get();
+				collection.updateOne(eq("Dni", filter.getString("Dni")), Updates.push(atributo, cita));
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

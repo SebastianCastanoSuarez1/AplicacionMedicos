@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.bson.Document;
@@ -64,6 +65,13 @@ public class Controller {
 	public ArrayList<String> findTratamiento(String nombre) {
 		ArrayList<String> medico = pacienteRepositoryImpl.findTratamiento(nombre);
 		return medico;
+	}
+	
+
+	public Boolean addCitasPaciente(Optional<Document> dni, Document cita) {
+		Boolean actualizado = pacienteRepositoryImpl.updateCitas(dni, "Citas_Paciente", cita);
+
+		return actualizado;
 	}
 
 	public ArrayList<ArrayList<String>> findMedicamentosTratamiento(String dni) {
