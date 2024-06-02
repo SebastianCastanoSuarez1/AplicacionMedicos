@@ -20,7 +20,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
-
+import com.mongodb.client.result.UpdateResult;
+import static com.mongodb.client.model.Updates.pull;
 import db.MongoDB;
 
 public class MedicoRepositoryImpl implements MedicoRepository {
@@ -194,6 +195,8 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		}
 		return resultado;
 	}
+
+
 
 	public Boolean update(Optional<Document> medico, String atributo, List<String> valores) {
 		try {

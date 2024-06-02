@@ -32,7 +32,7 @@ public class CerrarSesion extends JFrame {
 	private JRadioButton showPasswordButton;
 	private JPasswordField passwordField_1;
 	static String dni;
-	
+
 	private VentanaPrincipal ventanaPrincipal;
 
 	private final Controller controller = new Controller();
@@ -117,18 +117,25 @@ public class CerrarSesion extends JFrame {
 						dispose();
 					} else if (response == JOptionPane.NO_OPTION) {
 						JOptionPane.showMessageDialog(contentPanel, "No se ha dado de baja.");
-						ventanaPrincipal = new VentanaPrincipal(dni);
+						irAlMenuPrincipal(dni);
 					}
 				} else {
 					JOptionPane.showMessageDialog(contentPanel, "Las contraseñas no coinciden o son incorrectas.");
 				}
 			}
+
 		});
 		saveBtn.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		saveBtn.setBounds(459, 350, 85, 30);
 		contentPanel.add(saveBtn);
 
 		JButton btnNewButton_1 = new JButton("Cancelar\r\n");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAlMenuPrincipal(dni);
+
+			}
+		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnNewButton_1.setBounds(351, 350, 98, 30);
 		contentPanel.add(btnNewButton_1);
@@ -143,5 +150,11 @@ public class CerrarSesion extends JFrame {
 				}
 			}
 		});
+	}
+
+	private void irAlMenuPrincipal(String dni) {
+		ventanaPrincipal = new VentanaPrincipal(dni);
+		ventanaPrincipal.setVisible(true);
+		dispose();
 	}
 }

@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,6 +30,8 @@ public class VentanaPrincipal extends JFrame {
 	private VentanaTarjetaMedica ventanaTarjetaMedica;
 	private VentanaHistorialMedico ventanaHistorialMedico;
 	private VerInformes verInformes;
+	private VerCitas verCitas;
+	private EliminarCitas eliminarCitas;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -70,6 +71,16 @@ public class VentanaPrincipal extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				volverAVentanaPrincipal();
 			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblLogo.setBounds(134, -10, 315, 171);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblLogo.setBounds(144, 0, 295, 151);
+			}
 		});
 
 		JMenuBar menuBar = new JMenuBar();
@@ -89,14 +100,6 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		menuPerfil.add(menuItemEditarPerfil);
-
-		JMenuItem menuItemConfiguracion = new JMenuItem("Configuración");
-		menuItemConfiguracion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(VentanaPrincipal.this, "Opción de Configuración seleccionada");
-			}
-		});
-		menuPerfil.add(menuItemConfiguracion);
 
 		JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar Sesión");
 		menuItemCerrarSesion.addActionListener(new ActionListener() {
@@ -124,6 +127,29 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		menuCita.add(menuItemPedirCita);
+
+		JMenuItem mntmNewMenuVerCita = new JMenuItem("Ver citas\r\n");
+		mntmNewMenuVerCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				verCitas = new VerCitas(dni);
+				verCitas.setVisible(true);
+				dispose();
+			}
+		});
+		menuCita.add(mntmNewMenuVerCita);
+
+		JMenuItem mntmNewMenuModificarCitas = new JMenuItem("Modificar citas\r\n");
+		menuCita.add(mntmNewMenuModificarCitas);
+
+		JMenuItem mntmNewMenuEliminarCita = new JMenuItem("Eliminar Cita");
+		mntmNewMenuEliminarCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarCitas = new EliminarCitas(dni);
+				eliminarCitas.setVisible(true);
+				dispose();
+			}
+		});
+		menuCita.add(mntmNewMenuEliminarCita);
 
 		JMenu menuHistorial = new JMenu("Historial");
 		menuHistorial.setFont(new Font("Segoe UI", Font.PLAIN, 14));

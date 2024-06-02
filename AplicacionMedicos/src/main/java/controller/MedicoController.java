@@ -253,30 +253,6 @@ public class MedicoController {
 
 	}
 
-	public Optional<Document> comprobarContraseña(String contraseña) {
-		Optional<Document> medicos = medicoRepositoryImpl.findByContraseña(contraseña);
-		return medicos;
-
-	}
-
-	public Boolean eliminarInforme(String medicos, String valor) {
-		Boolean actualizado = informeRespositoryImpl.eliminarInformePaciente(medicos, valor);
-		return actualizado;
-	}
-
-	public Boolean anadirContraseña(String dni, String atributo, String valor) {
-		Optional<Document> medicos;
-
-		medicos = medicoRepositoryImpl.findById(dni);
-		Boolean actualizado = medicoRepositoryImpl.update(medicos, atributo, valor);
-
-		return actualizado;
-	}
-
-	public Boolean actualizarContraseña(Optional<Document> medicos, String atributo, String contraseña) {
-		return medicoRepositoryImpl.update(medicos, atributo, contraseña);
-	}
-
 	public String mostrar(List<Document> medicos) {
 		String ensenar = medicoRepositoryImpl.mostrarMedicos(medicos);
 		return ensenar;

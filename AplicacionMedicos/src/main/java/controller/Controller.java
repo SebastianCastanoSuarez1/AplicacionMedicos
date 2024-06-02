@@ -9,9 +9,11 @@ import org.bson.Document;
 import com.mongodb.client.result.DeleteResult;
 
 import repositories.Paciente.PacienteRepositoryImpl;
+import repository.medico.MedicoRepositoryImpl;
 
 public class Controller {
 	private final PacienteRepositoryImpl pacienteRepositoryImpl = new PacienteRepositoryImpl();
+	private final MedicoRepositoryImpl medicoRepositoryImpl = new MedicoRepositoryImpl();
 
 	public Optional<Document> findByDni(String dni) {
 		Optional<Document> paciente = pacienteRepositoryImpl.findById(dni);
@@ -30,6 +32,14 @@ public class Controller {
 	public Boolean authenticateUser(String username, String password) {
 		Optional<Document> user = pacienteRepositoryImpl.findByUsernameAndPassword(username, password);
 		return user.isPresent();
+	}
+
+	public String[][] findbyCitasPaciente(String dni) {
+		return pacienteRepositoryImpl.findCitasPacientes(dni);
+	}
+
+	public boolean eliminarCita(String dni, String dniMedico, String fecha) {
+		return pacienteRepositoryImpl.eliminarCita(dni, dniMedico, fecha);
 	}
 
 	public Boolean updateData(String dni, Document newData) {
@@ -57,6 +67,26 @@ public class Controller {
 		return medico;
 	}
 
+	public ArrayList<String> findbyCitas(String dni) {
+		ArrayList<String> medico = pacienteRepositoryImpl.findCitas(dni);
+		return medico;
+	}
+
+	public ArrayList<String> findDniMedicobyCitas(String dni) {
+		ArrayList<String> medico = pacienteRepositoryImpl.findDniMedicoDeCitas(dni);
+		return medico;
+	}
+
+	public String findNombreMedicoPorDni(String nombre) {
+		String medico = medicoRepositoryImpl.findNombrePordni(nombre);
+		return medico;
+	}
+
+	public String findApellidoMedicoPorDni(String nombre) {
+		String medico = medicoRepositoryImpl.findApellidosPordni(nombre);
+		return medico;
+	}
+
 	public ArrayList<String> findFecha(String nombre) {
 		ArrayList<String> medico = pacienteRepositoryImpl.findFecha(nombre);
 		return medico;
@@ -66,7 +96,6 @@ public class Controller {
 		ArrayList<String> medico = pacienteRepositoryImpl.findTratamiento(nombre);
 		return medico;
 	}
-	
 
 	public Boolean addCitasPaciente(Optional<Document> dni, Document cita) {
 		Boolean actualizado = pacienteRepositoryImpl.updateCitas(dni, "Citas_Paciente", cita);

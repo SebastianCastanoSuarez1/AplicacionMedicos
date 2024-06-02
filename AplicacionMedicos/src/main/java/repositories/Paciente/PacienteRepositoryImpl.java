@@ -1,6 +1,7 @@
 package repositories.Paciente;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.pull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 
 import db.MongoDB;
 
@@ -87,6 +89,22 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			e.printStackTrace();
 		}
 		return resultado;
+	}
+
+	public boolean eliminarCita(String dni, String dniMedico, String fecha) {
+		boolean exito = false;
+		try {
+			Bson filter = eq("Dni", dni);
+			Bson update = pull("Citas_Paciente", new Document("DniMedico", dniMedico).append("Fecha", fecha));
+			UpdateResult resultado = collection.updateOne(filter, update);
+			// Verifica si algún documento fue modificado
+			if (resultado.getModifiedCount() > 0) {
+				exito = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return exito;
 	}
 
 	public Boolean update(Optional<Document> paciente, String atributo, List<String> valores) {
@@ -238,6 +256,66 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		Document result = collection.find(filter).first();
 		List<String> alergenos = (List<String>) result.get("Alergenos");
 		return alergenos.toArray(new String[0]);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public String[][] findCitasPacientes(String dniPaciente) {
+		Bson filter = Filters.eq("dni", dniPaciente);
+		Document result = collection.find(filter).first();
+
+		if (result != null) {
+			List<Document> citasDocumento = (List<Document>) result.get("Citas_Paciente");
+			String[][] citas = new String[citasDocumento.size()][2];
+
+			for (int i = 0; i < citasDocumento.size(); i++) {
+				Document cita = citasDocumento.get(i);
+				String dniMedico = cita.getString("DniMedico");
+				String fecha = cita.getString("Fecha");
+
+				citas[i][0] = dniMedico != null ? dniMedico : "Sin médico asignado";
+				citas[i][1] = fecha != null ? fecha : "Fecha no especificada";
+			}
+
+			return citas;
+		} else {
+			return new String[0][0]; // Retornar una matriz vacía si no se encuentra el documento
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findCitas(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Citas_Paciente");
+		ArrayList<String> fecha = new ArrayList<>();
+
+		for (Document obj : enfermedades) {
+			if (obj.containsKey("Fecha")) {
+				fecha.add(obj.getString("Fecha"));
+			}
+		}
+
+		return fecha;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findDniMedicoDeCitas(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Citas_Paciente");
+		ArrayList<String> fecha = new ArrayList<>();
+
+		for (Document obj : enfermedades) {
+			if (obj.containsKey("DniMedico")) {
+				fecha.add(obj.getString("DniMedico"));
+			}
+		}
+
+		return fecha;
 
 	}
 
