@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
@@ -145,6 +146,7 @@ public class Registro extends JFrame {
 							.append("Fecha_Nacimiento", bodformated.getText())
 							.append("Sexo", GendercomboBox.getSelectedItem().toString())
 							.append("Contraseña", PasswdTxtField.getText());
+					Document sinContraseña = controller.findByDni(dniformated.getText()).get();
 					if (!controller.existdni(dniformated.getText())) {
 						anadido = controller.savePaciente(paciente);
 						if (anadido) {
@@ -156,6 +158,18 @@ public class Registro extends JFrame {
 						} else {
 							mostrarMensaje("Tu cuenta no ha sido creada", Color.RED);
 						}
+					} else if (controller.existdni(dniformated.getText())
+							&& sinContraseña.getString("Contraseña") == null) {
+						Boolean addPassword = controller.actualizarContraseña(
+								controller.findByDni(dniformated.getText()), "Contraseña", PasswdTxtField.getText());
+						if (addPassword) {
+							JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente", "Confirmación",
+									JOptionPane.INFORMATION_MESSAGE);
+							dispose();
+							inicioSesion = new InicioSesion();
+							inicioSesion.setVisible(true);
+						}
+
 					} else {
 						mostrarMensaje("Este dni ya existe", Color.RED);
 					}
@@ -196,7 +210,7 @@ public class Registro extends JFrame {
 			e.printStackTrace();
 		}
 
-		timer = new javax.swing.Timer(8000, new ActionListener() {
+		timer = new Timer(8000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				finalMesgLbl.setText(""); // Limpiar el texto

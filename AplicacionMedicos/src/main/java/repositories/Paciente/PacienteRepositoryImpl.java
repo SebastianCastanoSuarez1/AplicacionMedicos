@@ -395,6 +395,22 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			return false;
 		}
 	}
+	public Boolean updatePassword(Optional<Document> medico, String atributo, String valor) {
+        try {
+
+            if (medico.isPresent()) {
+                Document filter = medico.get(); // filtro para seleccionar el documento a actualizar
+                Document update = new Document("$set", new Document(atributo, valor));
+                collection.updateOne(filter, update);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 	public List<Document> findByAttribute(String atributo, String valor) {
 		Bson filter = eq(atributo, valor);

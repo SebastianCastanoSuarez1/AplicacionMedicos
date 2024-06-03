@@ -29,6 +29,15 @@ public class Controller {
 		return pacienteRepositoryImpl.save(paciente);
 	}
 
+	public Boolean anadirContraseña(String dni, String atributo, String valor) {
+		Optional<Document> medicos;
+
+		medicos = pacienteRepositoryImpl.findById(dni);
+		Boolean actualizado = pacienteRepositoryImpl.update(medicos, atributo, valor);
+
+		return actualizado;
+	}
+
 	public Boolean authenticateUser(String username, String password) {
 		Optional<Document> user = pacienteRepositoryImpl.findByUsernameAndPassword(username, password);
 		return user.isPresent();

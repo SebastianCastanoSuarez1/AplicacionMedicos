@@ -1,10 +1,12 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -77,12 +79,9 @@ public class EliminarCitas extends JFrame {
 					citas = controller.findbyCitas(dni);
 					for (int i = 0; i < checkBoxes.size(); i++) {
 						if (checkBoxes.get(i).isSelected()) {
-							citas = controller.findbyCitas(dni);
-
 							String cita = citas.get(i);
 							String dniMedico = dniMedicos.get(i);
-							String fecha = obtenerFechaDeCita(cita);
-							if (controller.eliminarCita(dni, dniMedico, fecha)) {
+							if (controller.eliminarCita(dni, dniMedico, cita)) {
 								citasEliminadas++;
 							}
 						}
@@ -141,7 +140,7 @@ public class EliminarCitas extends JFrame {
 				panel.add(checkBox);
 			}
 
-			panel.setPreferredSize(new java.awt.Dimension(400, citas.size() * 40));
+			panel.setPreferredSize(new Dimension(400, citas.size() * 40));
 
 		} catch (NullPointerException e1) {
 			JOptionPane.showMessageDialog(EliminarCitas.this, "El DNI " + dni + " no tiene citas a cargo");
@@ -150,9 +149,4 @@ public class EliminarCitas extends JFrame {
 		}
 	}
 
-	private String obtenerFechaDeCita(String cita) {
-		String[] partes = cita.split(",");
-		String fechaParte = partes[1].trim();
-		return fechaParte;
-	}
 }
