@@ -23,7 +23,7 @@ import org.bson.Document;
 
 import controller.Controller;
 
-public class CerrarSesion extends JFrame {
+public class VentanaDarseBaja extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -42,7 +42,7 @@ public class CerrarSesion extends JFrame {
 	 */
 	public static void main(String[] args) {
 		try {
-			CerrarSesion dialog = new CerrarSesion(dni);
+			VentanaDarseBaja dialog = new VentanaDarseBaja(dni);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -53,8 +53,8 @@ public class CerrarSesion extends JFrame {
 	/**
 	 * Create the dialog.
 	 */
-	public CerrarSesion(String dni) {
-		CerrarSesion.dni = dni;
+	public VentanaDarseBaja(String dni) {
+		VentanaDarseBaja.dni = dni;
 		setBounds(100, 100, 624, 451);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));

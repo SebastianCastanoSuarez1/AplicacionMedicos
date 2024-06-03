@@ -64,7 +64,6 @@ public class EliminarCitas extends JFrame {
 		scrollPane.setBounds(31, 150, 437, 121);
 		contentPane.add(scrollPane);
 
-		// Panel to hold checkboxes and text areas
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		scrollPane.setViewportView(panel);

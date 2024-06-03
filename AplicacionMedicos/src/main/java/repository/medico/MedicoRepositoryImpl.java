@@ -196,8 +196,6 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return resultado;
 	}
 
-
-
 	public Boolean update(Optional<Document> medico, String atributo, List<String> valores) {
 		try {
 			if (medico.isPresent()) {
@@ -237,6 +235,21 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 				Document filter = medico.get();
 				Document update = new Document("$set", new Document(atributo, valores));
 				collection.updateOne(filter, update);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public Boolean eliminarCita(Optional<Document> paciente, String atributo, String valor) {
+		try {
+			if (paciente.isPresent()) {
+				Document filter = paciente.get();
+				collection.updateOne(eq("Dni", filter.getString("Dni")), Updates.pull(atributo, valor));
 				return true;
 			} else {
 				return false;

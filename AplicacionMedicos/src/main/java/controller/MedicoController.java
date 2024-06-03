@@ -31,6 +31,11 @@ public class MedicoController {
 		return informe;
 	}
 
+	public Boolean eliminarCita(Optional<Document> medicos, String valor) {
+		Boolean actualizado = medicoRepositoryImpl.eliminarCita(medicos, "Citas_Abiertas", valor);
+		return actualizado;
+	}
+
 	public Optional<Document> comprobarDniPaciente(String dni) {
 
 		Optional<Document> informe = informeRespositoryImpl.findById(dni);

@@ -8,13 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -26,7 +26,7 @@ public class VentanaPrincipal extends JFrame {
 	static String dni;
 
 	private VentanaEditarPerfil vEditarPerfil;
-	private CerrarSesion cerrarSesion;
+	private VentanaDarseBaja cerrarSesion;
 	private VentanaTarjetaMedica ventanaTarjetaMedica;
 	private VentanaHistorialMedico ventanaHistorialMedico;
 	private VerInformes verInformes;
@@ -104,14 +104,19 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar Sesión");
 		menuItemCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cerrarSesion = new CerrarSesion(dni);
-				cerrarSesion.setVisible(true);
-				dispose();
+				volverAVentanaPrincipal();
 			}
 		});
 		menuPerfil.add(menuItemCerrarSesion);
 
 		JMenuItem menuItemDarseDeBaja = new JMenuItem("Darse de baja");
+		menuItemDarseDeBaja.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cerrarSesion = new VentanaDarseBaja(dni);
+				cerrarSesion.setVisible(true);
+				dispose();
+			}
+		});
 		menuPerfil.add(menuItemDarseDeBaja);
 
 		JMenu menuCita = new JMenu("Cita");

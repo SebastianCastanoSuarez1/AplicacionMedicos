@@ -47,6 +47,8 @@ public class VentanaPedirCitas extends JFrame {
 	private List<Document> medicosEspecialidad = new ArrayList<>();
 	private List<String> citasDisponibles;
 
+	private VentanaPrincipal ventanaPrincipal;
+
 	/**
 	 * Launch the application.
 	 */
@@ -115,8 +117,12 @@ public class VentanaPedirCitas extends JFrame {
 
 						Boolean anadido = controller.addCitasPaciente(paciente, listaCitas);
 						if (anadido) {
+							medicoController.eliminarCita(medicoController.findByDni(dniMedico), citaSeleccionada);
 							lblMensaje.setText("Cita asignada al paciente con éxito");
 							lblMensaje.setForeground(Color.GREEN);
+							ventanaPrincipal = new VentanaPrincipal(dni);
+							ventanaPrincipal.setVisible(true);
+							dispose();
 						} else {
 							lblMensaje.setText("Cita no ha sido asignada al paciente con éxito");
 							lblMensaje.setForeground(Color.RED);
