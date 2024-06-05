@@ -3,8 +3,13 @@ package view;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.DefaultComboBoxModel;
@@ -16,18 +21,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.bson.Document;
+
 import controller.Controller;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import controller.MedicoController;
 
 public class ModificarCita extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Controller controller;
+
+	private Controller controller = new Controller();
+	private MedicoController medicoController = new MedicoController();
+
 	private JComboBox<String> comboBoxEspecialidades;
 	private ArrayList<String> citas, dniMedicos;
-
+	private JComboBox<String> comboBoxCitas; // Esta es la variable de instancia que se está utilizando
 	static String dni;
 
 	public static void main(String[] args) {
@@ -64,13 +73,13 @@ public class ModificarCita extends JFrame {
 		comboBoxEspecialidades.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String especialidadSeleccionada = (String) comboBoxEspecialidades.getSelectedItem();
-
+				cargarCitasDisponibles(especialidadSeleccionada);
 			}
 		});
 		comboBoxEspecialidades.setBounds(50, 120, 200, 21);
 		contentPane.add(comboBoxEspecialidades);
 
-		JComboBox<String> comboBoxCitas = new JComboBox<>();
+		comboBoxCitas = new JComboBox<>(); // Inicialización correcta
 		comboBoxCitas.setBounds(378, 120, 150, 21);
 		contentPane.add(comboBoxCitas);
 
@@ -108,5 +117,36 @@ public class ModificarCita extends JFrame {
 			JOptionPane.showMessageDialog(ModificarCita.this, "Error al cargar especialidades.");
 		}
 	}
-	
+
+	private void cargarCitasDisponibles(String especialidad) {
+		if (especialidad != null && !especialidad.isEmpty()) {
+			List<Document> medicosEspecialidad = medicoController.findbyEspecialidad(especialidad);
+			ArrayList<String> citasDisponibles = new ArrayList<>();
+			Map<Integer, String> posicion_Dni = new HashMap<>();
+			int contador = 0;
+			for (Document medico : medicosEspecialidad) {
+				String dni = medico.getString("Dni");
+				List<String> citasMedico = medico.getList("Citas_Abiertas", String.class);
+
+				if (citasMedico != null) {
+					for (String cita : citasMedico) {
+						posicion_Dni.put(contador, dni);
+						citasDisponibles.add(cita);
+						contador++;
+					}
+				}
+			}
+
+			comboBoxCitas.removeAllItems(); 
+			for (String cita : citasDisponibles) {
+				comboBoxCitas.addItem(cita);
+			}
+			comboBoxCitas.setEnabled(true);
+		} else {
+			comboBoxCitas.setEnabled(false);
+		}
+
+		JButton btnGuardarCambios = (JButton) contentPane.getComponent(4);
+		btnGuardarCambios.setEnabled(comboBoxCitas.getItemCount() > 0);
+	}
 }

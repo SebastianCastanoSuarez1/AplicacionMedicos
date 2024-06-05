@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import org.bson.Document;
 
@@ -35,19 +40,18 @@ public class VentanaPedirCitas extends JFrame {
 	MedicoController medicoController = new MedicoController();
 
 	private JComboBox<String> comboBoxEspecialidades;
-	private JComboBox<String> comboBoxCitasDisponibles;
 	private JButton btnAceptar;
 	private JButton btnCancelar;
 	private VentanaPrincipal principal;
 	private JLabel lblMensaje;
-	private DateFormat formateador;
 	private JLabel lblNewLabel;
 	private HashMap<Integer, String> posicion_Dni;
 
 	private List<Document> medicosEspecialidad = new ArrayList<>();
-	private List<String> citasDisponibles;
 
 	private VentanaPrincipal ventanaPrincipal;
+	private JTable table;
+	private DefaultTableModel tableModel;
 
 	/**
 	 * Launch the application.
@@ -86,17 +90,12 @@ public class VentanaPedirCitas extends JFrame {
 			comboBoxEspecialidades.setModel(new DefaultComboBoxModel<String>(new String[] { "", "Medico Familia",
 					"Cirugia", "Traumatologia", "Dermatologia", "Oftalmologia", "Pediatria", "Reumatologia",
 					"Neurologia", "Enfermeria", "Fisioterapia", "Gastroenterologia" }));
-			comboBoxEspecialidades.setBounds(178, 119, 179, 21);
+			comboBoxEspecialidades.setBounds(178, 30, 179, 21);
 			contentPane.add(comboBoxEspecialidades);
-
-			comboBoxCitasDisponibles = new JComboBox<String>();
-			comboBoxCitasDisponibles.setEnabled(false);
-			comboBoxCitasDisponibles.setBounds(178, 219, 179, 21);
-			contentPane.add(comboBoxCitasDisponibles);
 
 			JLabel lblNewLabel_1 = new JLabel("Citas disponibles:");
 			lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			lblNewLabel_1.setBounds(30, 223, 100, 13);
+			lblNewLabel_1.setBounds(30, 326, 100, 13);
 			contentPane.add(lblNewLabel_1);
 
 			btnAceptar = new JButton("Aceptar");
@@ -105,26 +104,32 @@ public class VentanaPedirCitas extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					Optional<Document> paciente = controller.findByDni(dni);
 					if (paciente.isPresent()) {
-						String citaSeleccionada = (String) comboBoxCitasDisponibles.getSelectedItem();
-						int selectedIndex = comboBoxCitasDisponibles.getSelectedIndex();
-						String dniMedico = posicion_Dni.get(selectedIndex);
+						int selectedRow = table.getSelectedRow();
+						if (selectedRow != -1) {
+							String citaSeleccionada = tableModel.getValueAt(selectedRow, 0).toString();
+							String dniMedico = posicion_Dni.get(selectedRow);
 
-						System.out.println("Selected Index: " + selectedIndex); // Debugging line
-						System.out.println("DNI Medico: " + dniMedico); // Debugging line
+							String[] dniPacientes = new String[1];
+							dniPacientes[0] = dni;
 
-						Document listaCitas = new Document();
-						listaCitas.append("DniMedico", dniMedico).append("Fecha", citaSeleccionada);
+							Document listaCitas = new Document();
+							listaCitas.append("DniMedico", dniMedico).append("Fecha", citaSeleccionada);
+							Boolean anadido = controller.addCitasPaciente(paciente, listaCitas);
+							if (anadido) {
+								medicoController.eliminarCita(medicoController.findByDni(dniMedico), citaSeleccionada);
+								medicoController.crearPacientesCargo(dniMedico, dniPacientes);
 
-						Boolean anadido = controller.addCitasPaciente(paciente, listaCitas);
-						if (anadido) {
-							medicoController.eliminarCita(medicoController.findByDni(dniMedico), citaSeleccionada);
-							lblMensaje.setText("Cita asignada al paciente con éxito");
-							lblMensaje.setForeground(Color.GREEN);
-							ventanaPrincipal = new VentanaPrincipal(dni);
-							ventanaPrincipal.setVisible(true);
-							dispose();
+								lblMensaje.setText("Cita asignada al paciente con éxito");
+								lblMensaje.setForeground(Color.GREEN);
+								ventanaPrincipal = new VentanaPrincipal(dni);
+								ventanaPrincipal.setVisible(true);
+								dispose();
+							} else {
+								lblMensaje.setText("Cita no ha sido asignada al paciente con éxito");
+								lblMensaje.setForeground(Color.RED);
+							}
 						} else {
-							lblMensaje.setText("Cita no ha sido asignada al paciente con éxito");
+							lblMensaje.setText("Seleccione una cita de la tabla.");
 							lblMensaje.setForeground(Color.RED);
 						}
 					} else {
@@ -156,8 +161,23 @@ public class VentanaPedirCitas extends JFrame {
 
 			lblNewLabel = new JLabel("Especialidad:");
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			lblNewLabel.setBounds(30, 123, 100, 13);
+			lblNewLabel.setBounds(30, 34, 100, 13);
 			contentPane.add(lblNewLabel);
+
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setBounds(49, 89, 447, 224);
+			contentPane.add(scrollPane);
+
+			tableModel = new DefaultTableModel(new Object[] { "Fecha" }, 0);
+			table = new JTable(tableModel);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			scrollPane.setViewportView(table);
+
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent event) {
+					btnAceptar.setEnabled(table.getSelectedRow() != -1);
+				}
+			});
 
 			comboBoxEspecialidades.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -173,10 +193,9 @@ public class VentanaPedirCitas extends JFrame {
 
 	// Método para cargar citas disponibles según la especialidad seleccionada
 	private void cargarCitasDisponibles(String especialidad) {
-		comboBoxCitasDisponibles.removeAllItems();
+		tableModel.setRowCount(0);
 		if (especialidad != null && !especialidad.isEmpty()) {
 			medicosEspecialidad = medicoController.findbyEspecialidad(especialidad);
-			ArrayList<String> citasDisponibles = new ArrayList<>();
 			posicion_Dni = new HashMap<>();
 			int contador = 0;
 			for (Document medico : medicosEspecialidad) {
@@ -186,23 +205,12 @@ public class VentanaPedirCitas extends JFrame {
 				if (citasMedico != null) {
 					for (String cita : citasMedico) {
 						posicion_Dni.put(contador, dni);
-						citasDisponibles.add(cita);
+						tableModel.addRow(new Object[] { cita });
 						contador++;
 					}
 				}
 			}
-
-			// Limpiar el modelo actual del comboBox
-			comboBoxCitasDisponibles.removeAllItems();
-
-			// Agregar cada cita al modelo del comboBox
-			for (String cita : citasDisponibles) {
-				comboBoxCitasDisponibles.addItem(cita);
-			}
-			comboBoxCitasDisponibles.setEnabled(true);
-		} else {
-			comboBoxCitasDisponibles.setEnabled(false);
+			btnAceptar.setEnabled(false);
 		}
-		btnAceptar.setEnabled(comboBoxCitasDisponibles.getItemCount() > 0);
 	}
 }

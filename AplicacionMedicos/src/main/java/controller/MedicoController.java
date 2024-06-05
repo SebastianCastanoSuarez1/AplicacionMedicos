@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +61,13 @@ public class MedicoController {
 		return medico;
 	}
 
+	public Boolean crearPacientesCargo(String dniMedico, String[] dni_Paciente) {
+
+		List<String> pacientes_List = Arrays.asList(dni_Paciente);
+
+		Boolean actualizado = medicoRepositoryImpl.updatePacientesCargo(dniMedico, "Pacientes_Cargo", pacientes_List);
+		return actualizado;
+	}
 //	public String[] findMedicamentosPaciente(String dni) {
 //		String[] medico = pacienteRepositoryImpl.findMedicamentos(dni);
 //		return medico;

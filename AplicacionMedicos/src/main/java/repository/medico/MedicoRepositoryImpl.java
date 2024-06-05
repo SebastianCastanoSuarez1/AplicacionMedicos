@@ -74,7 +74,17 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return (String) dniList;
 
 	}
-	
+
+	public Boolean updatePacientesCargo(String dniMedico, String atributo, List<String> valor) {
+		try {
+			Bson filter = eq("Dni", dniMedico);
+			collection.updateOne(filter, Updates.addEachToSet(atributo, valor));
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public String findEspecialidadPordni(String paciente) {
 		Bson filter = eq(dni, paciente);
