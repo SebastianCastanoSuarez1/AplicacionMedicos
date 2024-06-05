@@ -32,6 +32,7 @@ public class VentanaPrincipal extends JFrame {
 	private VerInformes verInformes;
 	private VerCitas verCitas;
 	private EliminarCitas eliminarCitas;
+	private ModificarCita modificarCita;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -144,6 +145,13 @@ public class VentanaPrincipal extends JFrame {
 		menuCita.add(mntmNewMenuVerCita);
 
 		JMenuItem mntmNewMenuModificarCitas = new JMenuItem("Modificar citas\r\n");
+		mntmNewMenuModificarCitas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modificarCita = new ModificarCita(dni);
+				modificarCita.setVisible(true);
+				dispose();
+			}
+		});
 		menuCita.add(mntmNewMenuModificarCitas);
 
 		JMenuItem mntmNewMenuEliminarCita = new JMenuItem("Eliminar Cita");

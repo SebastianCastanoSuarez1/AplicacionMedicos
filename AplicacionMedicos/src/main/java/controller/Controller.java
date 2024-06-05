@@ -91,8 +91,13 @@ public class Controller {
 		return medico;
 	}
 
-	public String findApellidoMedicoPorDni(String nombre) {
-		String medico = medicoRepositoryImpl.findApellidosPordni(nombre);
+	public String findApellidoMedicoPorDni(String apellido) {
+		String medico = medicoRepositoryImpl.findApellidosPordni(apellido);
+		return medico;
+	}
+
+	public String findEspecialidadMedicoPorDni(String especialidad) {
+		String medico = medicoRepositoryImpl.findEspecialidadPordni(especialidad);
 		return medico;
 	}
 
@@ -108,7 +113,6 @@ public class Controller {
 
 	public Boolean addCitasPaciente(Optional<Document> dni, Document cita) {
 		Boolean actualizado = pacienteRepositoryImpl.updateCitas(dni, "Citas_Paciente", cita);
-
 		return actualizado;
 	}
 

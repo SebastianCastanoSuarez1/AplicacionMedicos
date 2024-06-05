@@ -99,7 +99,7 @@ public class VentanaDarseBaja extends JFrame {
 		passwordField_1.setBounds(215, 249, 200, 30);
 		contentPanel.add(passwordField_1);
 
-		JButton saveBtn = new JButton("Siguiente");
+		JButton saveBtn = new JButton("Aceptar");
 		saveBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Optional<Document> documento = controller.findByDni(dni);

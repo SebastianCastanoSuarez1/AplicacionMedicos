@@ -26,7 +26,7 @@ public class InicioSesion extends JFrame {
 	private JPasswordField passwordField;
 	private JLabel usernameLabel;
 	private MaskFormatter mascara;
-	JFormattedTextField formattedDni;
+	private JFormattedTextField formattedDni;
 	private Registro registro;
 	private VentanaPrincipal ventanaPrincipal;
 	private CambiarContrasena cambiarContrasena;

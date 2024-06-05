@@ -74,6 +74,7 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return (String) dniList;
 
 	}
+	
 
 	public String findEspecialidadPordni(String paciente) {
 		Bson filter = eq(dni, paciente);

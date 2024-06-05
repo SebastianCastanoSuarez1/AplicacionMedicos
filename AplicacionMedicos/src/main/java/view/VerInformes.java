@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -88,7 +89,7 @@ public class VerInformes extends JFrame {
 
 		panelInformes = new JPanel();
 		panelInformes.setBackground(new Color(230, 230, 250));
-		panelInformes.setLayout(null); // Set layout to null for absolute positioning
+		panelInformes.setLayout(null);
 		scrollPane.setViewportView(panelInformes);
 
 		btnCancelar = new JButton("Volver");
@@ -103,7 +104,6 @@ public class VerInformes extends JFrame {
 		btnCancelar.setBounds(194, 315, 85, 27);
 		contentPane.add(btnCancelar);
 
-		// Cargar informes directamente
 		cargarInformes(dni);
 	}
 
@@ -111,6 +111,10 @@ public class VerInformes extends JFrame {
 		try {
 			informes = controllerMedico.findInformeJaspersoft(dni);
 			horaCreacion = controllerMedico.findHoraCreacion(dni);
+
+			// Invertir el orden de las listas
+			Collections.reverse(informes);
+			Collections.reverse(horaCreacion);
 
 			panelInformes.removeAll();
 			int totalHeight = 10 + informes.size() * 40;

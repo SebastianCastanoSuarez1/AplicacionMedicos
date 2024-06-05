@@ -43,28 +43,29 @@ public class EliminarCitas extends JFrame {
 		EliminarCitas.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 502, 376);
+		setBounds(100, 100, 685, 482);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(230, 230, 250));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		lblEliminarCitasCon = new JLabel("Eliminar citas con los pacientes a cargo");
+		lblEliminarCitasCon = new JLabel("Eliminar citas \r\n");
 		lblEliminarCitasCon.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblEliminarCitasCon.setBounds(21, 32, 233, 27);
+		lblEliminarCitasCon.setBounds(31, 38, 357, 27);
 		contentPane.add(lblEliminarCitasCon);
 
-		lblNewLabel = new JLabel("Citas con los pacientes");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(31, 113, 157, 37);
+		lblNewLabel = new JLabel("Marque las citas que quiera eliminar\r\n");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblNewLabel.setBounds(31, 59, 252, 37);
 		contentPane.add(lblNewLabel);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(31, 150, 437, 121);
+		scrollPane.setBounds(31, 150, 606, 222);
 		contentPane.add(scrollPane);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 255, 255));
 		panel.setLayout(null);
 		scrollPane.setViewportView(panel);
 
@@ -94,7 +95,7 @@ public class EliminarCitas extends JFrame {
 			}
 		});
 		btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnAceptar.setBounds(280, 282, 85, 27);
+		btnAceptar.setBounds(343, 382, 85, 27);
 		contentPane.add(btnAceptar);
 
 		btnCancelar = new JButton("Cancelar");
@@ -106,7 +107,7 @@ public class EliminarCitas extends JFrame {
 			}
 		});
 		btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnCancelar.setBounds(100, 282, 85, 27);
+		btnCancelar.setBounds(198, 382, 85, 27);
 		contentPane.add(btnCancelar);
 
 		cargarDatos(panel);
@@ -118,6 +119,7 @@ public class EliminarCitas extends JFrame {
 			dniMedicos = controller.findDniMedicobyCitas(dni);
 			String nombreMedico = "";
 			String apellidoMedico = "";
+			String especialidadMedico = "";
 			StringBuilder todasLasCitas = new StringBuilder();
 			panel.removeAll();
 			checkBoxes.clear();
@@ -125,16 +127,17 @@ public class EliminarCitas extends JFrame {
 			for (int i = 0; i < citas.size(); i++) {
 				nombreMedico = controller.findNombreMedicoPorDni(dniMedicos.get(i));
 				apellidoMedico = controller.findApellidoMedicoPorDni(dniMedicos.get(i));
+				especialidadMedico = controller.findEspecialidadMedicoPorDni(dniMedicos.get(i));
 				todasLasCitas.append(citas.get(i)).append(" - ").append(nombreMedico).append(" " + apellidoMedico)
-						.append("\n");
+						.append(" - " + especialidadMedico).append("\n");
 
-				JTextArea textArea = new JTextArea(citas.get(i) + " - " + nombreMedico + " " + apellidoMedico);
-				textArea.setBounds(10, i * 40, 320, 30);
+				JTextArea textArea = new JTextArea(
+						citas.get(i) + " - " + nombreMedico + " " + apellidoMedico + " - " + especialidadMedico);
+				textArea.setBounds(10, i * 40, 430, 30);
 				textArea.setEditable(false);
 				panel.add(textArea);
-
 				JCheckBox checkBox = new JCheckBox();
-				checkBox.setBounds(340, i * 40, 25, 30);
+				checkBox.setBounds(450, i * 40, 25, 30); // Mueve el CheckBox más a la derecha
 				checkBoxes.add(checkBox);
 				panel.add(checkBox);
 			}
