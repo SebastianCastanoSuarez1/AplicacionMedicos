@@ -33,7 +33,7 @@ public class ModificarCita extends JFrame {
 
 	private Controller controller = new Controller();
 	private MedicoController medicoController = new MedicoController();
-
+	private Map<String, String> Dni_Cita;
 	private JComboBox<String> comboBoxEspecialidades;
 	private ArrayList<String> citas, dniMedicos;
 	private JComboBox<String> comboBoxCitas; // Esta es la variable de instancia que se está utilizando
@@ -120,9 +120,17 @@ public class ModificarCita extends JFrame {
 
 	private void cargarCitasDisponibles(String especialidad) {
 		if (especialidad != null && !especialidad.isEmpty()) {
-			List<Document> medicosEspecialidad = medicoController.findbyEspecialidad(especialidad);
-			ArrayList<String> citasDisponibles = new ArrayList<>();
-			Map<Integer, String> posicion_Dni = new HashMap<>();
+			Document medicos;
+			citas = controller.findbyCitas(dni);
+			dniMedicos = controller.findDniMedicobyCitas(dni);
+			Dni_Cita = new HashMap<>();
+			for (int i = 0; i < dniMedicos.size(); i++) {
+				medicos = medicoController.findByDni(dni).get();
+				if (medicos.getString("Especialidad") == especialidad) {
+					Dni_Cita.put(dniMedicos.get(i), citas.get(i));
+				}
+			}
+			// Do not change anything above this line
 			int contador = 0;
 			for (Document medico : medicosEspecialidad) {
 				String dni = medico.getString("Dni");
@@ -130,14 +138,14 @@ public class ModificarCita extends JFrame {
 
 				if (citasMedico != null) {
 					for (String cita : citasMedico) {
-						posicion_Dni.put(contador, dni);
+						Dni_Cita.put(contador, dni);
 						citasDisponibles.add(cita);
 						contador++;
 					}
 				}
 			}
 
-			comboBoxCitas.removeAllItems(); 
+			comboBoxCitas.removeAllItems();
 			for (String cita : citasDisponibles) {
 				comboBoxCitas.addItem(cita);
 			}
@@ -149,4 +157,5 @@ public class ModificarCita extends JFrame {
 		JButton btnGuardarCambios = (JButton) contentPane.getComponent(4);
 		btnGuardarCambios.setEnabled(comboBoxCitas.getItemCount() > 0);
 	}
+
 }

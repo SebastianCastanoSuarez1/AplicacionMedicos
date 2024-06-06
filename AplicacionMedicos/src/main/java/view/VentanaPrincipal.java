@@ -33,6 +33,7 @@ public class VentanaPrincipal extends JFrame {
 	private VerCitas verCitas;
 	private EliminarCitas eliminarCitas;
 	private ModificarCita modificarCita;
+	private InicioSesion inicioSesion;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -105,7 +106,9 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar Sesión");
 		menuItemCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				volverAVentanaPrincipal();
+				inicioSesion = new InicioSesion();
+				inicioSesion.setVisible(true);
+				dispose();
 			}
 		});
 		menuPerfil.add(menuItemCerrarSesion);

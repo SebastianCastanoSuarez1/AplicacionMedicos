@@ -91,7 +91,6 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		Document result = collection.find(filter).first();
 		Object dniList = result.get(especialidad);
 		return (String) dniList;
-
 	}
 
 	public String findFechaIncorporacionPordni(String paciente) {

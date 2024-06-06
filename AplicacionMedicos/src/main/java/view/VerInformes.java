@@ -9,8 +9,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -20,6 +23,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+
+import org.bson.Document;
 
 import controller.Controller;
 import controller.MedicoController;
@@ -131,7 +136,7 @@ public class VerInformes extends JFrame {
 				int index = i;
 				downloadButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						downloadInforme(index);
+						descargarInforme(index, dni);
 					}
 				});
 				panelInformes.add(downloadButton);
@@ -145,22 +150,55 @@ public class VerInformes extends JFrame {
 		}
 	}
 
-	private void downloadInforme(int index) {
+	private void descargarInforme(int indice, String dni) {
+		VerInformes.dni = dni;
+		Document paciente = controller.findByDni(dni).get();
+		String nombrePaciente = paciente.getString("Nombre");
+		String apellidosPaciente = paciente.getString("Apellidos");
+		String DniMedico = paciente.getString("Dni_Medico");
+		String especialidad = controllerMedico.findByDni(DniMedico).get().getString("Especialidad");
+
+		// Asegúrate de que el formato coincide con las fechas en horaCreacion
+		DateTimeFormatter formatoOriginal = DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' uuuu HH:mm",
+				new Locale("es", "ES"));
+		DateTimeFormatter nuevoFormato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+		String fechaOficial = "";
+		if (indice < horaCreacion.size()) {
+			try {
+				// Intenta parsear la fecha
+				LocalDateTime fechaIngreso = LocalDateTime.parse(horaCreacion.get(indice), formatoOriginal);
+				// Formatea la fecha al nuevo formato
+				fechaOficial = fechaIngreso.format(nuevoFormato);
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Error al parsear la fecha: " + horaCreacion.get(indice));
+				return;
+			}
+		} else {
+			JOptionPane.showMessageDialog(this, "Índice fuera de rango para horaCreacion.");
+			return;
+		}
+
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Guardar Informe");
+
+		// Usa el formato corregido para la fecha
+		String defaultFileName = nombrePaciente + "" + apellidosPaciente + "" + especialidad + "_" + fechaOficial;
+		fileChooser.setSelectedFile(new File(defaultFileName));
+
 		int userSelection = fileChooser.showSaveDialog(this);
 
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
-			// Add ".pdf" extension if not present
 			if (!filePath.toLowerCase().endsWith(".pdf")) {
 				filePath += ".pdf";
 			}
 
 			try (FileOutputStream fos = new FileOutputStream(filePath)) {
-				fos.write(informes.get(index));
+				fos.write(informes.get(indice));
 				JOptionPane.showMessageDialog(this, "Informe descargado con éxito.");
 			} catch (IOException ex) {
 				ex.printStackTrace();

@@ -43,7 +43,7 @@ public class Registro extends JFrame {
 	private InicioSesion inicioSesion;
 	private final Controller controller = new Controller();
 	private JLabel finalMesgLbl;
-	private javax.swing.Timer timer;
+	private Timer timer;
 
 	/**
 	 * Launch the application.
@@ -152,9 +152,7 @@ public class Registro extends JFrame {
 						if (anadido) {
 							JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente", "Confirmación",
 									JOptionPane.INFORMATION_MESSAGE);
-							dispose();
-							inicioSesion = new InicioSesion();
-							inicioSesion.setVisible(true);
+							volverIcioSesion();
 						} else {
 							mostrarMensaje("Tu cuenta no ha sido creada", Color.RED);
 						}
@@ -165,9 +163,7 @@ public class Registro extends JFrame {
 						if (addPassword) {
 							JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente", "Confirmación",
 									JOptionPane.INFORMATION_MESSAGE);
-							dispose();
-							inicioSesion = new InicioSesion();
-							inicioSesion.setVisible(true);
+							volverIcioSesion();
 						}
 
 					} else {
@@ -175,6 +171,8 @@ public class Registro extends JFrame {
 					}
 				}
 			}
+
+	
 
 			private void mostrarMensaje(String mensaje, Color color) {
 				finalMesgLbl.setText(mensaje);
@@ -206,6 +204,16 @@ public class Registro extends JFrame {
 			dniformated.setBounds(142, 90, 132, 21);
 			contentPane.add(dniformated);
 
+			JButton btnNewButtonCancelar = new JButton("Cancelar");
+			btnNewButtonCancelar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					volverIcioSesion();
+
+				}
+			});
+			btnNewButtonCancelar.setBounds(256, 295, 92, 40);
+			contentPane.add(btnNewButtonCancelar);
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -226,7 +234,11 @@ public class Registro extends JFrame {
 		dniformated.addActionListener(new TextFieldListener());
 		GendercomboBox.addActionListener(new TextFieldListener());
 	}
-
+	private void volverIcioSesion() {
+		dispose();
+		inicioSesion = new InicioSesion();
+		inicioSesion.setVisible(true);
+	}
 	// Clase interna para manejar los eventos de cambio de texto en los campos des
 	// texto y en el ComboBox
 	private class TextFieldListener implements ActionListener {
