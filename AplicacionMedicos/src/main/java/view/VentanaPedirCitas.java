@@ -3,14 +3,18 @@ package view;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -36,8 +40,8 @@ public class VentanaPedirCitas extends JFrame {
 	private JPanel contentPane;
 	static String dni;
 
-	Controller controller = new Controller();
-	MedicoController medicoController = new MedicoController();
+	private Controller controller = new Controller();
+	private MedicoController medicoController = new MedicoController();
 
 	private JComboBox<String> comboBoxEspecialidades;
 	private JButton btnAceptar;
@@ -77,7 +81,7 @@ public class VentanaPedirCitas extends JFrame {
 			VentanaPedirCitas.dni = dni;
 
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 568, 471);
+			setBounds(100, 100, 739, 593);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(255, 255, 255));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -85,17 +89,45 @@ public class VentanaPedirCitas extends JFrame {
 			setContentPane(contentPane);
 			contentPane.setLayout(null);
 
+			ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
+			Image img = logo.getImage();
+			Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
+			logo = new ImageIcon(newImg);
+
+			JLabel lblLogo = new JLabel();
+			lblLogo.setBackground(new Color(0, 0, 0));
+			lblLogo.setIcon(logo);
+			lblLogo.setBounds(200, 0, 295, 151);
+			contentPane.add(lblLogo);
+
+			lblLogo.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+					ventanaPrincipal.setVisible(true);
+					dispose();
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+			});
+
 			// Inicialización del comboBoxEspecialidades
 			comboBoxEspecialidades = new JComboBox<String>();
 			comboBoxEspecialidades.setModel(new DefaultComboBoxModel<String>(new String[] { "", "Medico Familia",
 					"Cirugia", "Traumatologia", "Dermatologia", "Oftalmologia", "Pediatria", "Reumatologia",
 					"Neurologia", "Enfermeria", "Fisioterapia", "Gastroenterologia" }));
-			comboBoxEspecialidades.setBounds(178, 30, 179, 21);
+			comboBoxEspecialidades.setBounds(268, 165, 179, 21);
 			contentPane.add(comboBoxEspecialidades);
 
 			JLabel lblNewLabel_1 = new JLabel("Citas disponibles:");
 			lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			lblNewLabel_1.setBounds(30, 326, 100, 13);
+			lblNewLabel_1.setBounds(120, 461, 100, 13);
 			contentPane.add(lblNewLabel_1);
 
 			btnAceptar = new JButton("Aceptar");
@@ -139,7 +171,7 @@ public class VentanaPedirCitas extends JFrame {
 				}
 			});
 			btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			btnAceptar.setBounds(381, 353, 85, 27);
+			btnAceptar.setBounds(471, 488, 85, 27);
 			contentPane.add(btnAceptar);
 
 			btnCancelar = new JButton("Cancelar");
@@ -151,7 +183,7 @@ public class VentanaPedirCitas extends JFrame {
 				}
 			});
 			btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			btnCancelar.setBounds(216, 353, 85, 27);
+			btnCancelar.setBounds(306, 488, 85, 27);
 			contentPane.add(btnCancelar);
 
 			lblMensaje = new JLabel("");
@@ -161,11 +193,11 @@ public class VentanaPedirCitas extends JFrame {
 
 			lblNewLabel = new JLabel("Especialidad:");
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			lblNewLabel.setBounds(30, 34, 100, 13);
+			lblNewLabel.setBounds(120, 169, 100, 13);
 			contentPane.add(lblNewLabel);
 
 			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setBounds(49, 89, 447, 224);
+			scrollPane.setBounds(139, 224, 447, 224);
 			contentPane.add(scrollPane);
 
 			tableModel = new DefaultTableModel(new Object[] { "Fecha" }, 0);

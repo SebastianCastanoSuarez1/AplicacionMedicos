@@ -46,7 +46,6 @@ public class VentanaEditarPerfil extends JFrame {
 	private JLabel lblUpdateStatus;
 
 	private VentanaPrincipal ventanaPrincipal;
-	private VentanaEditarPerfil vEditarPerfil;
 
 	private final Controller controller = new Controller();
 	private JPasswordField passwordField;

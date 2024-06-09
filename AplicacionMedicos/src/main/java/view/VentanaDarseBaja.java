@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Optional;
 
 import javax.swing.ImageIcon;
@@ -55,48 +57,66 @@ public class VentanaDarseBaja extends JFrame {
 	 */
 	public VentanaDarseBaja(String dni) {
 		VentanaDarseBaja.dni = dni;
-		setBounds(100, 100, 624, 451);
+		setBounds(100, 100, 643, 502);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+
+		JLabel titulo = new JLabel("Estas seguro que quieres darte de baja?");
+		titulo.setFont(new Font("Tahoma", Font.BOLD, 14));
+		titulo.setForeground(new Color(128, 0, 0));
+		titulo.setBounds(54, 181, 302, 51);
+		contentPanel.add(titulo);
 		ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
 		Image img = logo.getImage();
 		Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
 		logo = new ImageIcon(newImg);
 
 		JLabel lblLogo = new JLabel();
+		lblLogo.setBackground(new Color(0, 0, 0));
 		lblLogo.setIcon(logo);
-		lblLogo.setBounds(130, 0, 295, 151);
+		lblLogo.setBounds(131, 10, 295, 151);
 		contentPanel.add(lblLogo);
 
-		JLabel titulo = new JLabel("Estas seguro que quieres darte de baja?");
-		titulo.setFont(new Font("Tahoma", Font.BOLD, 14));
-		titulo.setForeground(new Color(128, 0, 0));
-		titulo.setBounds(40, 144, 302, 51);
-		contentPanel.add(titulo);
+		lblLogo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+				ventanaPrincipal.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
 
 		JLabel passwordLbl = new JLabel("Contraseña:");
 		passwordLbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		passwordLbl.setBounds(40, 205, 82, 35);
+		passwordLbl.setBounds(54, 242, 82, 35);
 		contentPanel.add(passwordLbl);
 		passwordField = new JPasswordField();
-		passwordField.setBounds(215, 209, 200, 30);
+		passwordField.setBounds(229, 246, 200, 30);
 		contentPanel.add(passwordField);
 
 		showPasswordButton = new JRadioButton("Mostrar contraseña");
 		showPasswordButton.setContentAreaFilled(false);
-		showPasswordButton.setBounds(423, 208, 121, 30);
+		showPasswordButton.setBounds(437, 245, 121, 30);
 		contentPanel.add(showPasswordButton);
 
 		JLabel lblConfirmarContrasea = new JLabel("Confirmar contraseña:");
 		lblConfirmarContrasea.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblConfirmarContrasea.setBounds(40, 250, 160, 35);
+		lblConfirmarContrasea.setBounds(54, 287, 160, 35);
 		contentPanel.add(lblConfirmarContrasea);
 
 		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(215, 249, 200, 30);
+		passwordField_1.setBounds(229, 286, 200, 30);
 		contentPanel.add(passwordField_1);
 
 		JButton saveBtn = new JButton("Aceptar");
@@ -126,7 +146,7 @@ public class VentanaDarseBaja extends JFrame {
 
 		});
 		saveBtn.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		saveBtn.setBounds(459, 350, 85, 30);
+		saveBtn.setBounds(473, 387, 85, 30);
 		contentPanel.add(saveBtn);
 
 		JButton btnNewButton_1 = new JButton("Cancelar\r\n");
@@ -137,7 +157,7 @@ public class VentanaDarseBaja extends JFrame {
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		btnNewButton_1.setBounds(351, 350, 98, 30);
+		btnNewButton_1.setBounds(365, 387, 98, 30);
 		contentPanel.add(btnNewButton_1);
 
 		showPasswordButton.addActionListener(new ActionListener() {

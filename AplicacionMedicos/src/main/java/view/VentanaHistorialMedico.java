@@ -3,10 +3,14 @@ package view;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,25 +53,53 @@ public class VentanaHistorialMedico extends JFrame {
 		VentanaHistorialMedico.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 539, 524);
+		setBounds(100, 100, 589, 588);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(230, 230, 250));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
+		Image img = logo.getImage();
+		Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
+		logo = new ImageIcon(newImg);
+
+		JLabel lblLogo = new JLabel();
+		lblLogo.setBackground(new Color(0, 0, 0));
+		lblLogo.setIcon(logo);
+		lblLogo.setBounds(123, 0, 295, 151);
+		contentPane.add(lblLogo);
+
+		lblLogo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+				ventanaPrincipal.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+
 		lblHistorialMedico = new JLabel("Historial Médico");
 		lblHistorialMedico.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblHistorialMedico.setBounds(166, 25, 192, 21);
+		lblHistorialMedico.setBounds(203, 150, 192, 21);
 		contentPane.add(lblHistorialMedico);
 
 		lblAlergenos = new JLabel("Alérgenos:");
 		lblAlergenos.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblAlergenos.setBounds(95, 100, 85, 22);
+		lblAlergenos.setBounds(123, 200, 85, 22);
 		contentPane.add(lblAlergenos);
 
 		scrollPaneAlergenos = new JScrollPane();
-		scrollPaneAlergenos.setBounds(229, 100, 180, 70);
+		scrollPaneAlergenos.setBounds(257, 200, 180, 70);
 		contentPane.add(scrollPaneAlergenos);
 
 		textAreaAlergenos = new JTextArea();
@@ -76,11 +108,11 @@ public class VentanaHistorialMedico extends JFrame {
 
 		lblMedicamentos = new JLabel("Medicamentos:");
 		lblMedicamentos.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblMedicamentos.setBounds(95, 180, 85, 22);
+		lblMedicamentos.setBounds(123, 280, 85, 22);
 		contentPane.add(lblMedicamentos);
 
 		scrollPaneMedicamentos = new JScrollPane();
-		scrollPaneMedicamentos.setBounds(229, 180, 180, 70);
+		scrollPaneMedicamentos.setBounds(257, 280, 180, 70);
 		contentPane.add(scrollPaneMedicamentos);
 
 		textAreaMedicamentos = new JTextArea();
@@ -89,11 +121,11 @@ public class VentanaHistorialMedico extends JFrame {
 
 		lblEnfermedades = new JLabel("Enfermedades:");
 		lblEnfermedades.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblEnfermedades.setBounds(95, 260, 85, 22);
+		lblEnfermedades.setBounds(123, 360, 85, 22);
 		contentPane.add(lblEnfermedades);
 
 		scrollPaneEnfermedades = new JScrollPane();
-		scrollPaneEnfermedades.setBounds(229, 260, 180, 70);
+		scrollPaneEnfermedades.setBounds(257, 360, 180, 70);
 		contentPane.add(scrollPaneEnfermedades);
 
 		textAreaEnfermedades = new JTextArea();
@@ -108,10 +140,11 @@ public class VentanaHistorialMedico extends JFrame {
 		});
 		btnVolver.setBackground(new Color(240, 240, 240));
 		btnVolver.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnVolver.setBounds(10, 10, 85, 21);
+		btnVolver.setBounds(123, 474, 129, 34);
 		contentPane.add(btnVolver);
 
 		JButton btnNewButton = new JButton("Ver enfermedades\r\n");
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (btnNewButton == e.getSource()) {
@@ -121,7 +154,7 @@ public class VentanaHistorialMedico extends JFrame {
 				}
 			}
 		});
-		btnNewButton.setBounds(199, 393, 117, 21);
+		btnNewButton.setBounds(293, 475, 146, 34);
 		contentPane.add(btnNewButton);
 
 		cargarDatosPaciente(dni);

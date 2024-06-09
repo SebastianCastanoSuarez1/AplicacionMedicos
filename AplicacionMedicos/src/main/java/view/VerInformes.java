@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,16 +38,15 @@ public class VerInformes extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	static String dni;
-	Controller controller = new Controller();
-	JLabel lblVerCitasCon;
-	JLabel lblNewLabel;
-	JPanel panelInformes;
-	JScrollPane scrollPane;
+	private Controller controller = new Controller();
+	private JLabel lblNewLabel;
+	private JPanel panelInformes;
+	private JScrollPane scrollPane;
 	private JButton btnCancelar;
-	VentanaPrincipal principal;
-	ArrayList<byte[]> informes;
-	ArrayList<String> horaCreacion;
-	MedicoController controllerMedico = new MedicoController();
+	private VentanaPrincipal principal;
+	private ArrayList<byte[]> informes;
+	private ArrayList<String> horaCreacion;
+	private MedicoController controllerMedico = new MedicoController();
 
 	/**
 	 * Launch the application.
@@ -69,31 +72,54 @@ public class VerInformes extends JFrame {
 		VerInformes.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 523, 389);
+		setBounds(100, 100, 593, 523);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(230, 230, 250));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 
 		setContentPane(contentPane);
 
-		lblVerCitasCon = new JLabel("Ver informes de los pacientes a cargo");
-		lblVerCitasCon.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblVerCitasCon.setBounds(10, 32, 269, 27);
-		contentPane.add(lblVerCitasCon);
+		ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
+		Image img = logo.getImage();
+		Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
+		logo = new ImageIcon(newImg);
 
-		lblNewLabel = new JLabel("Informes de los pacientes");
+		JLabel lblLogo = new JLabel();
+		lblLogo.setBackground(new Color(0, 0, 0));
+		lblLogo.setIcon(logo);
+		lblLogo.setBounds(129, 10, 295, 151);
+		contentPane.add(lblLogo);
+
+		lblLogo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+				ventanaPrincipal.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+
+		lblNewLabel = new JLabel("Informes disponibles");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(31, 70, 157, 37);
+		lblNewLabel.setBounds(73, 164, 157, 37);
 		contentPane.add(lblNewLabel);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(230, 230, 250));
-		scrollPane.setBounds(10, 100, 487, 201);
+		scrollPane.setBounds(52, 194, 487, 201);
 		contentPane.add(scrollPane);
 
 		panelInformes = new JPanel();
-		panelInformes.setBackground(new Color(230, 230, 250));
+		panelInformes.setBackground(new Color(255, 255, 255));
 		panelInformes.setLayout(null);
 		scrollPane.setViewportView(panelInformes);
 
@@ -106,7 +132,7 @@ public class VerInformes extends JFrame {
 			}
 		});
 		btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnCancelar.setBounds(194, 315, 85, 27);
+		btnCancelar.setBounds(236, 409, 85, 27);
 		contentPane.add(btnCancelar);
 
 		cargarInformes(dni);

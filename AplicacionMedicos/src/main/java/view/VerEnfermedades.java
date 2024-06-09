@@ -28,25 +28,24 @@ public class VerEnfermedades extends JFrame {
 	private JTextField textFieldTratamiento;
 	private JTextField textFieldInforme;
 	static String dni;
-	JLabel lblEnfermedad;
-	JLabel lblFecha;
-	JLabel lblTratamiento;
-	JLabel lblDetalles;
-	JLabel lblMedicamentosParaEl;
-	JLabel lblInforme;
-	JLabel lblTitulo;
-	JScrollPane scrollPaneMedicamentosTratamiento;
-	JTextArea textAreaMedicamentosTratamiento;
-	Controller controller = new Controller();
-	ArrayList<String> enfermedad, fecha, tratamiento, informe;
-	ArrayList<ArrayList<String>> medicamentos;
+	private JLabel lblEnfermedad;
+	private JLabel lblFecha;
+	private JLabel lblTratamiento;
+	private JLabel lblDetalles;
+	private JLabel lblMedicamentosParaEl;
+	private JLabel lblInforme;
+	private JLabel lblTitulo;
+	private JScrollPane scrollPaneMedicamentosTratamiento;
+	private JTextArea textAreaMedicamentosTratamiento;
+	private Controller controller = new Controller();
+	private ArrayList<String> enfermedad, fecha, tratamiento, informe;
+	private ArrayList<ArrayList<String>> medicamentos;
 	private static int posicionEnfermedad = 0;
-	JButton btnSiguienteEnfermedad;
-	JButton btnAnteriorEnfermedad;
-	JButton btnVolver;
-
-	VentanaPrincipal principal;
-	VentanaHistorialMedico historial;
+	private JButton btnSiguienteEnfermedad;
+	private JButton btnAnteriorEnfermedad;
+	private JButton btnVolver;
+	private VentanaPrincipal principal;
+	private VentanaHistorialMedico historial;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,7 +65,7 @@ public class VerEnfermedades extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 562, 520);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(230, 230, 250));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);

@@ -3,9 +3,13 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,20 +38,48 @@ public class VentanaTarjetaMedica extends JFrame {
 		this.medicamentos = controller.medicamentos(dni);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 400);
+		setBounds(100, 100, 696, 525);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
+		Image img = logo.getImage();
+		Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
+		logo = new ImageIcon(newImg);
+
+		JLabel lblLogo = new JLabel();
+		lblLogo.setBackground(new Color(0, 0, 0));
+		lblLogo.setIcon(logo);
+		lblLogo.setBounds(192, 10, 295, 151);
+		contentPane.add(lblLogo);
+
+		lblLogo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+				ventanaPrincipal.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+
 		lblNewLabel = new JLabel("Medicamentos disponibles en tu tarjeta médica\r\n");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(24, 20, 311, 37);
+		lblNewLabel.setBounds(73, 152, 311, 37);
 		contentPane.add(lblNewLabel);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(24, 60, 540, 200);
+		scrollPane.setBounds(73, 199, 540, 200);
 		contentPane.add(scrollPane);
 
 		// Dynamically add JLabels for medications
@@ -67,7 +99,7 @@ public class VentanaTarjetaMedica extends JFrame {
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnCancelar.setBounds(250, 300, 85, 27);
+		btnCancelar.setBounds(299, 439, 85, 27);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				principal = new VentanaPrincipal(dni);

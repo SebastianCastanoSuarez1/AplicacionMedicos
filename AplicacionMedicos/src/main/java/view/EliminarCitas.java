@@ -3,10 +3,14 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -24,15 +28,15 @@ public class EliminarCitas extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	static String dni;
-	ArrayList<String> citas, dniMedicos;
-	ArrayList<JCheckBox> checkBoxes;
-	Controller controller = new Controller();
-	JLabel lblEliminarCitasCon;
-	JLabel lblNewLabel;
-	JScrollPane scrollPane;
+	private ArrayList<String> citas, dniMedicos;
+	private ArrayList<JCheckBox> checkBoxes;
+	private Controller controller = new Controller();
+	private JLabel lblEliminarCitasCon;
+	private JLabel lblNewLabel;
+	private JScrollPane scrollPane;
 	private JButton btnAceptar;
 	private JButton btnCancelar;
-	VentanaPrincipal principal;
+	private VentanaPrincipal principal;
 
 	public static void main(String[] args) {
 		EliminarCitas frame = new EliminarCitas(dni);
@@ -43,25 +47,25 @@ public class EliminarCitas extends JFrame {
 		EliminarCitas.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 685, 482);
+		setBounds(100, 100, 719, 521);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(230, 230, 250));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		lblEliminarCitasCon = new JLabel("Eliminar citas \r\n");
 		lblEliminarCitasCon.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblEliminarCitasCon.setBounds(31, 38, 357, 27);
+		lblEliminarCitasCon.setBounds(46, 154, 357, 27);
 		contentPane.add(lblEliminarCitasCon);
 
 		lblNewLabel = new JLabel("Marque las citas que quiera eliminar\r\n");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblNewLabel.setBounds(31, 59, 252, 37);
+		lblNewLabel.setBounds(48, 179, 252, 37);
 		contentPane.add(lblNewLabel);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(31, 150, 606, 222);
+		scrollPane.setBounds(46, 215, 606, 222);
 		contentPane.add(scrollPane);
 
 		JPanel panel = new JPanel();
@@ -95,7 +99,7 @@ public class EliminarCitas extends JFrame {
 			}
 		});
 		btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnAceptar.setBounds(343, 382, 85, 27);
+		btnAceptar.setBounds(358, 447, 85, 27);
 		contentPane.add(btnAceptar);
 
 		btnCancelar = new JButton("Cancelar");
@@ -107,10 +111,38 @@ public class EliminarCitas extends JFrame {
 			}
 		});
 		btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnCancelar.setBounds(198, 382, 85, 27);
+		btnCancelar.setBounds(213, 447, 85, 27);
 		contentPane.add(btnCancelar);
 
 		cargarDatos(panel);
+
+		ImageIcon logo = new ImageIcon("src\\main\\resources\\multimedia\\logo_Mongo.png");
+		Image img = logo.getImage();
+		Image newImg = img.getScaledInstance(295, 151, Image.SCALE_SMOOTH);
+		logo = new ImageIcon(newImg);
+
+		JLabel lblLogo = new JLabel();
+		lblLogo.setBackground(new Color(0, 0, 0));
+		lblLogo.setIcon(logo);
+		lblLogo.setBounds(198, 10, 295, 151);
+		contentPane.add(lblLogo);
+
+		lblLogo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+				ventanaPrincipal.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
 	}
 
 	private void cargarDatos(JPanel panel) {
@@ -137,7 +169,8 @@ public class EliminarCitas extends JFrame {
 				textArea.setEditable(false);
 				panel.add(textArea);
 				JCheckBox checkBox = new JCheckBox();
-				checkBox.setBounds(450, i * 40, 25, 30); // Mueve el CheckBox más a la derecha
+				checkBox.setBounds(450, i * 40, 25, 30);
+				checkBox.setBackground(new Color(0, 0, 0));
 				checkBoxes.add(checkBox);
 				panel.add(checkBox);
 			}
@@ -150,5 +183,4 @@ public class EliminarCitas extends JFrame {
 			JOptionPane.showMessageDialog(EliminarCitas.this, "El DNI " + dni + " no tiene citas a cargo");
 		}
 	}
-
 }

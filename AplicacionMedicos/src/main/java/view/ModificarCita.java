@@ -33,7 +33,7 @@ public class ModificarCita extends JFrame {
 
 	private Controller controller = new Controller();
 	private MedicoController medicoController = new MedicoController();
-	private Map<String, String> Dni_Cita;
+	private Map<String, String> dni_Cita;
 	private JComboBox<String> comboBoxEspecialidades;
 	private ArrayList<String> citas, dniMedicos;
 	private JComboBox<String> comboBoxCitas; // Esta es la variable de instancia que se está utilizando
@@ -123,32 +123,25 @@ public class ModificarCita extends JFrame {
 			Document medicos;
 			citas = controller.findbyCitas(dni);
 			dniMedicos = controller.findDniMedicobyCitas(dni);
-			Dni_Cita = new HashMap<>();
+			dni_Cita = new HashMap<>();
 			for (int i = 0; i < dniMedicos.size(); i++) {
-				medicos = medicoController.findByDni(dni).get();
+				medicos = medicoController.findByDni(dniMedicos.get(i)).get();
 				if (medicos.getString("Especialidad") == especialidad) {
-					Dni_Cita.put(dniMedicos.get(i), citas.get(i));
+					dni_Cita.put(dniMedicos.get(i), citas.get(i));
 				}
 			}
 			// Do not change anything above this line
 			int contador = 0;
-			for (Document medico : medicosEspecialidad) {
-				String dni = medico.getString("Dni");
-				List<String> citasMedico = medico.getList("Citas_Abiertas", String.class);
-
-				if (citasMedico != null) {
-					for (String cita : citasMedico) {
-						Dni_Cita.put(contador, dni);
-						citasDisponibles.add(cita);
-						contador++;
-					}
-				}
-			}
+			HashMap<Integer, String> index_cita = new HashMap<>();
 
 			comboBoxCitas.removeAllItems();
-			for (String cita : citasDisponibles) {
-				comboBoxCitas.addItem(cita);
+			for (Map.Entry<String, String> entry : dni_Cita.entrySet()) {
+				index_cita.put(contador, entry.getValue()); // Add this line to populate index_cita with the value
+															// (cita) from dni_Cita
+				comboBoxCitas.addItem(entry.getValue());
+				contador++; // Increment the counter after each iteration
 			}
+
 			comboBoxCitas.setEnabled(true);
 		} else {
 			comboBoxCitas.setEnabled(false);

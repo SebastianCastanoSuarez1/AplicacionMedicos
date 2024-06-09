@@ -301,11 +301,6 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return results;
 	}
 
-	public List<Document> findByAttribute(String atributo, String valor) {
-		Bson filter = eq(atributo, valor);
-		Bson projectionFields = Projections.excludeId();
-		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
-		return results;
-	}
+
 
 }

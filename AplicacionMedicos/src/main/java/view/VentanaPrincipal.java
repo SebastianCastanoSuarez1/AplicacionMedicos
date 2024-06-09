@@ -76,12 +76,10 @@ public class VentanaPrincipal extends JFrame {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				lblLogo.setBounds(134, -10, 315, 171);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				lblLogo.setBounds(144, 0, 295, 151);
 			}
 		});
 
