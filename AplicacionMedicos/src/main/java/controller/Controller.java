@@ -116,6 +116,11 @@ public class Controller {
 		return actualizado;
 	}
 
+	public Boolean modificarCita1(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
+	    Boolean actualizado = pacienteRepositoryImpl.modificarCita1(dni, dniMedico, fechaOriginal, fechaNueva);
+	    return actualizado;
+	}
+
 	public ArrayList<ArrayList<String>> findMedicamentosTratamiento(String dni) {
 		return pacienteRepositoryImpl.findMedicamentosTratamiento(dni);
 	}

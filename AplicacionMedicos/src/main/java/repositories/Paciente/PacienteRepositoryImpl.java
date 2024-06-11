@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.pull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -221,6 +223,25 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		return informe;
 	}
 
+	public Boolean modificarCita(String dni, String dniMedico, String fechaOriginal, String nuevaFecha) {
+		try {
+			Document filter = new Document("Dni", dni).append("Citas_Paciente",
+					new Document("$elemMatch", new Document("DniMedico", dniMedico).append("Fecha", fechaOriginal)));
+
+			Document update = new Document("$set", new Document("Citas_Paciente.$[e].Fecha", nuevaFecha));
+
+			Document arrayFilter = new Document("e.DniMedico", dniMedico).append("e.Fecha", fechaOriginal);
+
+			UpdateOptions options = new UpdateOptions().arrayFilters(Arrays.asList(arrayFilter));
+
+			UpdateResult result = collection.updateOne(filter, update, options);
+			return result.getModifiedCount() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>> findMedicamentosTratamiento(String medico) {
 		Bson filter = eq(dni, medico);
@@ -395,22 +416,38 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			return false;
 		}
 	}
-	public Boolean updatePassword(Optional<Document> medico, String atributo, String valor) {
-        try {
 
-            if (medico.isPresent()) {
-                Document filter = medico.get(); // filtro para seleccionar el documento a actualizar
-                Document update = new Document("$set", new Document(atributo, valor));
-                collection.updateOne(filter, update);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+	public Boolean updatePassword(Optional<Document> medico, String atributo, String valor) {
+		try {
+
+			if (medico.isPresent()) {
+				Document filter = medico.get(); // filtro para seleccionar el documento a actualizar
+				Document update = new Document("$set", new Document(atributo, valor));
+				collection.updateOne(filter, update);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public Boolean modificarCita1(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
+		try {
+			Document filter = new Document("Dni", dni).append("Citas_Paciente",
+					new Document("$elemMatch", new Document("DniMedico", dniMedico).append("Fecha", fechaOriginal)));
+			Document update = new Document("$set", new Document("Citas_Paciente.$[e].Fecha", fechaNueva));
+			Document arrayFilter = new Document("e.DniMedico", dniMedico).append("e.Fecha", fechaOriginal);
+			UpdateOptions options = new UpdateOptions().arrayFilters(Arrays.asList(arrayFilter));
+			UpdateResult result = collection.updateOne(filter, update, options);
+			return result.getModifiedCount() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public List<Document> findByAttribute(String atributo, String valor) {
 		Bson filter = eq(atributo, valor);

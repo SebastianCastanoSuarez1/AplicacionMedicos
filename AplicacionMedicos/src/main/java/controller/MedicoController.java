@@ -42,6 +42,11 @@ public class MedicoController {
 		Optional<Document> informe = informeRespositoryImpl.findById(dni);
 		return informe;
 	}
+	
+	public String[] citasAbiertas(String dni) {
+        String[] dniPacientes = medicoRepositoryImpl.guardarCitasAbiertas(dni);
+        return dniPacientes;
+    }
 
 	public Boolean salvarDniMedico(Document paciente) {
 		return informeRespositoryImpl.save(paciente);
@@ -50,6 +55,12 @@ public class MedicoController {
 	public String[] findAlergenosPaciente(String dni) {
 		String[] medico = pacienteRepositoryImpl.findAlergenos(dni);
 		return medico;
+	}
+
+	public Boolean modificarCita(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
+		Boolean actualizado = pacienteRepositoryImpl.modificarCita(dni, dniMedico, fechaOriginal, fechaNueva);
+
+		return actualizado;
 	}
 
 	public List<Document> findbyEspecialidad(String nombre) {

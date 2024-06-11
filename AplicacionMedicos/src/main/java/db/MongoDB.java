@@ -7,7 +7,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 public class MongoDB {
-
+	
 	private final String FILE_PROPS = "./src/main/resources/app.conf";
 	private static MongoClient db = null;
 	

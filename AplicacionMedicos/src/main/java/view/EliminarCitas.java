@@ -170,7 +170,7 @@ public class EliminarCitas extends JFrame {
 				panel.add(textArea);
 				JCheckBox checkBox = new JCheckBox();
 				checkBox.setBounds(450, i * 40, 25, 30);
-				checkBox.setBackground(new Color(0, 0, 0));
+				checkBox.setBackground(new Color(255, 255, 255));
 				checkBoxes.add(checkBox);
 				panel.add(checkBox);
 			}

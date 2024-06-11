@@ -30,7 +30,6 @@ public class InicioSesion extends JFrame {
 	private Registro registro;
 	private VentanaPrincipal ventanaPrincipal;
 	private CambiarContrasena cambiarContrasena;
-
 	private final Controller controller = new Controller();
 
 	public static void main(String[] args) {

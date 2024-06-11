@@ -124,38 +124,12 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return dniList.toArray(new String[0]);
 	}
 
-	public String pretty(String json) {
-		JsonElement je = JsonParser.parseString(json);
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		return gson.toJson(je);
-	}
-
-	public String mostrarMedicos(List<Document> medicos) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String pretty = "";
-		if (medicos.isEmpty()) {
-
-		} else {
-			for (Document doc : medicos) {
-				String json = gson.toJson(doc);
-
-				pretty += pretty(json) + "\n";
-			}
-		}
-		return pretty;
-	}
-
-	public String mostrar(Optional<Document> medicos) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String pretty = "";
-		if (medicos.isEmpty()) {
-
-		} else {
-			Document doc1 = medicos.get();
-			String json = gson.toJson(doc1);
-			pretty += pretty(json) + "\n";
-		}
-		return pretty;
+	@SuppressWarnings("unchecked")
+	public String[] guardarCitasAbiertas(String medico) {
+		Bson filter = eq(dni, medico);
+		Document document = collection.find(filter).first();
+		List<String> dniList = (List<String>) document.get("Citas_Abiertas");
+		return dniList.toArray(new String[0]);
 	}
 
 	@Override
@@ -300,7 +274,5 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
 		return results;
 	}
-
-
 
 }
