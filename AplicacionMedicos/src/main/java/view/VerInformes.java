@@ -48,9 +48,6 @@ public class VerInformes extends JFrame {
 	private ArrayList<String> horaCreacion;
 	private MedicoController controllerMedico = new MedicoController();
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

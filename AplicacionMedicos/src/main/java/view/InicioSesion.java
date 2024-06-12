@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -132,20 +134,34 @@ public class InicioSesion extends JFrame {
 			}
 		});
 
-		loginButton.addActionListener(e -> {
-			String username = formattedDni.getText();
-			String password = new String(passwordField.getPassword());
+		loginButton.addActionListener(e -> iniciarSesion());
 
-			if (controller.existdni(username) && controller.authenticateUser(username, password)) {
-				ventanaPrincipal = new VentanaPrincipal(username);
-				ventanaPrincipal.setVisible(true);
-				dispose();
-			} else if (controller.existdni(username)) {
-				JOptionPane.showMessageDialog(InicioSesion.this,
-						"El usuario " + username + " existe pero la contraseña es incorrecta");
-			} else {
-				JOptionPane.showMessageDialog(InicioSesion.this, "El usuario " + username + " no existe");
+		KeyAdapter enterKeyListener = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					iniciarSesion();
+				}
 			}
-		});
+		};
+
+		formattedDni.addKeyListener(enterKeyListener);
+		passwordField.addKeyListener(enterKeyListener);
+	}
+
+	private void iniciarSesion() {
+		String username = formattedDni.getText();
+		String password = new String(passwordField.getPassword());
+
+		if (controller.existdni(username) && controller.authenticateUser(username, password)) {
+			ventanaPrincipal = new VentanaPrincipal(username);
+			ventanaPrincipal.setVisible(true);
+			dispose();
+		} else if (controller.existdni(username)) {
+			JOptionPane.showMessageDialog(InicioSesion.this,
+					"El usuario " + username + " existe pero la contraseña es incorrecta");
+		} else {
+			JOptionPane.showMessageDialog(InicioSesion.this, "El usuario " + username + " no existe");
+		}
 	}
 }

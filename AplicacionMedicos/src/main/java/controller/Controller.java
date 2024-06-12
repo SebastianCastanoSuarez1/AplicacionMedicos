@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.bson.Document;
@@ -106,6 +105,11 @@ public class Controller {
 		return medico;
 	}
 
+	public ArrayList<String> findFechaAlta(String nombre) {
+		ArrayList<String> medico = pacienteRepositoryImpl.findFechaAlta(nombre);
+		return medico;
+	}
+
 	public ArrayList<String> findTratamiento(String nombre) {
 		ArrayList<String> medico = pacienteRepositoryImpl.findTratamiento(nombre);
 		return medico;
@@ -116,9 +120,9 @@ public class Controller {
 		return actualizado;
 	}
 
-	public Boolean modificarCita1(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
-	    Boolean actualizado = pacienteRepositoryImpl.modificarCita1(dni, dniMedico, fechaOriginal, fechaNueva);
-	    return actualizado;
+	public Boolean modificarCita(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
+		Boolean actualizado = pacienteRepositoryImpl.modificarCita(dni, dniMedico, fechaOriginal, fechaNueva);
+		return actualizado;
 	}
 
 	public ArrayList<ArrayList<String>> findMedicamentosTratamiento(String dni) {

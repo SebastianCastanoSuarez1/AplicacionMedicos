@@ -9,10 +9,6 @@ import java.util.Optional;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -20,8 +16,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-import static com.mongodb.client.model.Updates.pull;
+
 import db.MongoDB;
 
 public class MedicoRepositoryImpl implements MedicoRepository {
@@ -51,14 +46,6 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return documentList;
 	}
 
-	public String findDniPorDni(String paciente) {
-		Bson filter = eq(dni, paciente);
-		Document result = collection.find(filter).first();
-		Object dniList = result.get(dni);
-		return (String) dniList;
-
-	}
-
 	public String findNombrePordni(String paciente) {
 		Bson filter = eq(dni, paciente);
 		Document result = collection.find(filter).first();
@@ -86,25 +73,10 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		}
 	}
 
-	public String findEspecialidadPordni(String paciente) {
-		Bson filter = eq(dni, paciente);
-		Document result = collection.find(filter).first();
-		Object dniList = result.get(especialidad);
-		return (String) dniList;
-	}
-
-	public String findFechaIncorporacionPordni(String paciente) {
-		Bson filter = eq(dni, paciente);
-		Document result = collection.find(filter).first();
-		Object dniList = result.get(fecha_incorporacion);
-		return (String) dniList;
-
-	}
-
-	public Boolean abrirCitasMedicas(Optional<Document> paciente, String atributo, List<String> citas) {
+	public Boolean abrirCitasMedicas(Optional<Document> medico, String atributo, List<String> citas) {
 		try {
-			if (paciente.isPresent()) {
-				Document filter = paciente.get();
+			if (medico.isPresent()) {
+				Document filter = medico.get();
 				collection.updateOne(eq("Dni", filter.getString("Dni")), Updates.pushEach(atributo, citas));
 				return true;
 			} else {
@@ -116,12 +88,11 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public String[] guardarDniPacientes(String medico) {
-		Bson filter = eq(dni, medico);
-		Document document = collection.find(filter).first();
-		List<String> dniList = (List<String>) document.get("Pacientes_Cargo");
-		return dniList.toArray(new String[0]);
+	public String findEspecialidadPordni(String paciente) {
+		Bson filter = eq(dni, paciente);
+		Document result = collection.find(filter).first();
+		Object dniList = result.get(especialidad);
+		return (String) dniList;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -151,23 +122,6 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		return Optional.ofNullable(result);
 	}
 
-	public Optional<Document> findByContraseña(String contraseña) {
-
-		Bson filter = eq("Contraseña", contraseña);
-		Bson projectionFields = Projections.excludeId();
-		Document result = collection.find(filter).projection(projectionFields).first();
-		return Optional.ofNullable(result);
-	}
-
-	public List<Document> findByNombre(String nombre) {
-
-		Bson filter = eq("Nombre", nombre);
-		Bson projectionFields = Projections.excludeId();
-
-		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
-		return results;
-	}
-
 	@Override
 	public DeleteResult delete(String dni) {
 		DeleteResult resultado = null;
@@ -178,55 +132,6 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 			e.printStackTrace();
 		}
 		return resultado;
-	}
-
-	public Boolean update(Optional<Document> medico, String atributo, List<String> valores) {
-		try {
-			if (medico.isPresent()) {
-				Document filter = medico.get();
-				Document update = new Document("$set", new Document(atributo, valores));
-				collection.updateOne(filter, update);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Boolean update(Optional<Document> medico, String atributo, String valor) {
-		try {
-
-			if (medico.isPresent()) {
-				Document filter = medico.get(); // filtro para seleccionar el documento a actualizar
-				Document update = new Document("$set", new Document(atributo, valor));
-				collection.updateOne(filter, update);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Boolean update(Optional<Document> medico, String atributo, Document valores) {
-		try {
-			if (medico.isPresent()) {
-				Document filter = medico.get();
-				Document update = new Document("$set", new Document(atributo, valores));
-				collection.updateOne(filter, update);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 	public Boolean eliminarCita(Optional<Document> paciente, String atributo, String valor) {
@@ -244,31 +149,7 @@ public class MedicoRepositoryImpl implements MedicoRepository {
 		}
 	}
 
-//	public Boolean updatePacientesCargo(Optional<Document> medico, Document historial) {
-//		try {
-//
-//			if (medico.isPresent()) {
-//				Document filter = medico.get(); // filtro para seleccionar el documento a actualizar
-//				Document update = new Document("$set", new Document(historial));
-//				collection.updateOne(filter, update);
-//				return true;
-//			} else {
-//				return false;
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
-
 	public List<Document> findByEspecialidad(String especialidad) {
-		Bson filter = eq("Especialidad", especialidad);
-		Bson projectionFields = Projections.excludeId();
-		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
-		return results;
-	}
-
-	public List<Document> findByMedicodeFamilia(String especialidad) {
 		Bson filter = eq("Especialidad", especialidad);
 		Bson projectionFields = Projections.excludeId();
 		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());

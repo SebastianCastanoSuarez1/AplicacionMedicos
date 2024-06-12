@@ -72,15 +72,6 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		return Optional.ofNullable(result);
 	}
 
-	public List<Document> findByNombre(String nombre) {
-
-		Bson filter = eq("Nombre", nombre);
-		Bson projectionFields = Projections.excludeId();
-
-		List<Document> results = collection.find(filter).projection(projectionFields).into(new ArrayList<>());
-		return results;
-	}
-
 	@Override
 	public DeleteResult delete(String dni) {
 		DeleteResult resultado = null;
@@ -109,20 +100,21 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		return exito;
 	}
 
-	public Boolean update(Optional<Document> paciente, String atributo, List<String> valores) {
-		try {
-			if (paciente.isPresent()) {
-				Document filter = paciente.get();
-				Document update = new Document("$set", new Document(atributo, valores));
-				collection.updateOne(filter, update);
-				return true;
-			} else {
-				return false;
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> findFechaAlta(String paciente) {
+		Bson filter = eq(dni, paciente);
+		Document document = collection.find(filter).first();
+
+		ArrayList<Document> enfermedades = (ArrayList<Document>) document.get("Enfermedades");
+		ArrayList<String> fecha = new ArrayList<>();
+
+		for (Document obj : enfermedades) {
+			if (obj.containsKey("Fecha_Alta")) {
+				fecha.add(obj.getString("Fecha_Alta"));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
 		}
+
+		return fecha;
 	}
 
 	public Boolean update(Optional<Document> paciente, String atributo, String valor) {
@@ -131,22 +123,6 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 			if (paciente.isPresent()) {
 				Document filter = paciente.get(); // filtro para seleccionar el documento a actualizar
 				Document update = new Document("$set", new Document(atributo, valor));
-				collection.updateOne(filter, update);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Boolean update(Optional<Document> paciente, String atributo, Document valores) {
-		try {
-			if (paciente.isPresent()) {
-				Document filter = paciente.get();
-				Document update = new Document("$set", new Document(atributo, valores));
 				collection.updateOne(filter, update);
 				return true;
 			} else {
@@ -175,8 +151,8 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		ArrayList<String> fecha = new ArrayList<>();
 
 		for (Document obj : enfermedades) {
-			if (obj.containsKey("Fecha")) {
-				fecha.add(obj.getString("Fecha"));
+			if (obj.containsKey("Fecha_Baja")) {
+				fecha.add(obj.getString("Fecha_Baja"));
 			}
 		}
 
@@ -221,25 +197,6 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		}
 
 		return informe;
-	}
-
-	public Boolean modificarCita(String dni, String dniMedico, String fechaOriginal, String nuevaFecha) {
-		try {
-			Document filter = new Document("Dni", dni).append("Citas_Paciente",
-					new Document("$elemMatch", new Document("DniMedico", dniMedico).append("Fecha", fechaOriginal)));
-
-			Document update = new Document("$set", new Document("Citas_Paciente.$[e].Fecha", nuevaFecha));
-
-			Document arrayFilter = new Document("e.DniMedico", dniMedico).append("e.Fecha", fechaOriginal);
-
-			UpdateOptions options = new UpdateOptions().arrayFilters(Arrays.asList(arrayFilter));
-
-			UpdateResult result = collection.updateOne(filter, update, options);
-			return result.getModifiedCount() > 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -434,7 +391,7 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 		}
 	}
 
-	public Boolean modificarCita1(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
+	public Boolean modificarCita(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
 		try {
 			Document filter = new Document("Dni", dni).append("Citas_Paciente",
 					new Document("$elemMatch", new Document("DniMedico", dniMedico).append("Fecha", fechaOriginal)));

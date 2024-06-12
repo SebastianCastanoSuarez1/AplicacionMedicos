@@ -7,29 +7,17 @@ import java.util.Optional;
 
 import org.bson.Document;
 
-import model.Informe;
-import repositories.Paciente.PacienteRepositoryImpl;
 import repository.informe.InformeRepositoryImpl;
 import repository.medico.MedicoRepositoryImpl;
 
 public class MedicoController {
 
 	private final MedicoRepositoryImpl medicoRepositoryImpl = new MedicoRepositoryImpl();
-	private final PacienteRepositoryImpl pacienteRepositoryImpl = new PacienteRepositoryImpl();
 	private final InformeRepositoryImpl informeRespositoryImpl = new InformeRepositoryImpl();
 
 	public Optional<Document> findByDni(String dni) {
 		Optional<Document> medico = medicoRepositoryImpl.findById(dni);
-
 		return medico;
-
-	}
-
-	public Document anadirDniPaciente(String dni) {
-		Document informe;
-		informe = new Informe().append("Dni_Paciente", dni);
-
-		return informe;
 	}
 
 	public Boolean eliminarCita(Optional<Document> medicos, String valor) {
@@ -37,30 +25,15 @@ public class MedicoController {
 		return actualizado;
 	}
 
-	public Optional<Document> comprobarDniPaciente(String dni) {
-
-		Optional<Document> informe = informeRespositoryImpl.findById(dni);
-		return informe;
-	}
-	
-	public String[] citasAbiertas(String dni) {
-        String[] dniPacientes = medicoRepositoryImpl.guardarCitasAbiertas(dni);
-        return dniPacientes;
-    }
-
-	public Boolean salvarDniMedico(Document paciente) {
-		return informeRespositoryImpl.save(paciente);
-	}
-
-	public String[] findAlergenosPaciente(String dni) {
-		String[] medico = pacienteRepositoryImpl.findAlergenos(dni);
-		return medico;
-	}
-
-	public Boolean modificarCita(String dni, String dniMedico, String fechaOriginal, String fechaNueva) {
-		Boolean actualizado = pacienteRepositoryImpl.modificarCita(dni, dniMedico, fechaOriginal, fechaNueva);
+	public Boolean abrirCitasPaciente(Optional<Document> dni, List<String> citas) {
+		Boolean actualizado = medicoRepositoryImpl.abrirCitasMedicas(dni, "Citas_Abiertas", citas);
 
 		return actualizado;
+	}
+
+	public String[] citasAbiertas(String dni) {
+		String[] dniPacientes = medicoRepositoryImpl.guardarCitasAbiertas(dni);
+		return dniPacientes;
 	}
 
 	public List<Document> findbyEspecialidad(String nombre) {

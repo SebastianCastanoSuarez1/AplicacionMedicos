@@ -38,14 +38,14 @@ public class VerEnfermedades extends JFrame {
 	private JScrollPane scrollPaneMedicamentosTratamiento;
 	private JTextArea textAreaMedicamentosTratamiento;
 	private Controller controller = new Controller();
-	private ArrayList<String> enfermedad, fecha, tratamiento, informe;
+	private ArrayList<String> enfermedad, fecha,fecha_Alta, tratamiento, informe;
 	private ArrayList<ArrayList<String>> medicamentos;
 	private static int posicionEnfermedad = 0;
 	private JButton btnSiguienteEnfermedad;
 	private JButton btnAnteriorEnfermedad;
 	private JButton btnVolver;
 	private VentanaPrincipal principal;
-	private VentanaHistorialMedico historial;
+	private JTextField textField_fecha_Alta;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -63,7 +63,7 @@ public class VerEnfermedades extends JFrame {
 	public VerEnfermedades(String dni) {
 		VerEnfermedades.dni = dni;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 562, 520);
+		setBounds(100, 100, 562, 550);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -72,6 +72,7 @@ public class VerEnfermedades extends JFrame {
 
 		enfermedad = controller.findEnfermedad(dni);
 		fecha = controller.findFecha(dni);
+		fecha_Alta=controller.findFechaAlta(dni);
 		tratamiento = controller.findTratamiento(dni);
 		medicamentos = controller.findMedicamentosTratamiento(dni);
 		informe = controller.findInforme(dni);
@@ -93,34 +94,34 @@ public class VerEnfermedades extends JFrame {
 		textFieldFecha.setBounds(269, 133, 180, 22);
 		contentPane.add(textFieldFecha);
 
-		lblFecha = new JLabel("Fecha:");
+		lblFecha = new JLabel("Fecha baja:");
 		lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblFecha.setBounds(121, 131, 97, 22);
 		contentPane.add(lblFecha);
 
 		lblTratamiento = new JLabel("Tratamiento:");
 		lblTratamiento.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTratamiento.setBounds(121, 201, 97, 22);
+		lblTratamiento.setBounds(119, 230, 97, 22);
 		contentPane.add(lblTratamiento);
 
 		textFieldTratamiento = new JTextField();
 		textFieldTratamiento.setEditable(false);
 		textFieldTratamiento.setColumns(10);
-		textFieldTratamiento.setBounds(269, 201, 180, 22);
+		textFieldTratamiento.setBounds(267, 230, 180, 22);
 		contentPane.add(textFieldTratamiento);
 
 		lblDetalles = new JLabel("Detalles:");
 		lblDetalles.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblDetalles.setBounds(121, 167, 85, 22);
+		lblDetalles.setBounds(121, 198, 85, 22);
 		contentPane.add(lblDetalles);
 
 		lblMedicamentosParaEl = new JLabel("Medicamentos");
 		lblMedicamentosParaEl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblMedicamentosParaEl.setBounds(121, 248, 120, 22);
+		lblMedicamentosParaEl.setBounds(119, 277, 120, 22);
 		contentPane.add(lblMedicamentosParaEl);
 
 		scrollPaneMedicamentosTratamiento = new JScrollPane();
-		scrollPaneMedicamentosTratamiento.setBounds(269, 247, 180, 70);
+		scrollPaneMedicamentosTratamiento.setBounds(267, 276, 180, 70);
 		contentPane.add(scrollPaneMedicamentosTratamiento);
 
 		textAreaMedicamentosTratamiento = new JTextArea();
@@ -129,13 +130,13 @@ public class VerEnfermedades extends JFrame {
 
 		lblInforme = new JLabel("Informe:");
 		lblInforme.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblInforme.setBounds(121, 325, 97, 22);
+		lblInforme.setBounds(119, 354, 97, 22);
 		contentPane.add(lblInforme);
 
 		textFieldInforme = new JTextField();
 		textFieldInforme.setEditable(false);
 		textFieldInforme.setColumns(10);
-		textFieldInforme.setBounds(269, 327, 180, 22);
+		textFieldInforme.setBounds(267, 356, 180, 22);
 		contentPane.add(textFieldInforme);
 
 		lblTitulo = new JLabel("Informacion de las enfermedades del paciente");
@@ -156,7 +157,7 @@ public class VerEnfermedades extends JFrame {
 		});
 
 		btnSiguienteEnfermedad.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnSiguienteEnfermedad.setBounds(299, 400, 179, 32);
+		btnSiguienteEnfermedad.setBounds(297, 429, 179, 32);
 		contentPane.add(btnSiguienteEnfermedad);
 
 		btnAnteriorEnfermedad = new JButton("Anterior Enfermedad");
@@ -171,7 +172,7 @@ public class VerEnfermedades extends JFrame {
 			}
 		});
 		btnAnteriorEnfermedad.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnAnteriorEnfermedad.setBounds(88, 400, 153, 32);
+		btnAnteriorEnfermedad.setBounds(86, 429, 153, 32);
 		contentPane.add(btnAnteriorEnfermedad);
 
 		btnVolver = new JButton("Volver");
@@ -186,6 +187,17 @@ public class VerEnfermedades extends JFrame {
 		btnVolver.setBackground(UIManager.getColor("Button.background"));
 		btnVolver.setBounds(35, 29, 85, 21);
 		contentPane.add(btnVolver);
+		
+		JLabel lblFechaAlta = new JLabel("Fecha alta:");
+		lblFechaAlta.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblFechaAlta.setBounds(121, 173, 97, 22);
+		contentPane.add(lblFechaAlta);
+		
+		textField_fecha_Alta = new JTextField();
+		textField_fecha_Alta.setEditable(false);
+		textField_fecha_Alta.setColumns(10);
+		textField_fecha_Alta.setBounds(269, 175, 180, 22);
+		contentPane.add(textField_fecha_Alta);
 
 		if (!enfermedad.isEmpty()) {
 			mostrarDatosEnfermedad();
@@ -199,6 +211,7 @@ public class VerEnfermedades extends JFrame {
 		textFieldTratamiento.setText(tratamiento.get(posicionEnfermedad));
 		textFieldInforme.setText(informe.get(posicionEnfermedad));
 		textAreaMedicamentosTratamiento.setText(String.join("\n", medicamentos.get(posicionEnfermedad)));
+		textField_fecha_Alta.setText(fecha_Alta.get(posicionEnfermedad));
 	}
 
 	private void actualizarEstadoBotones() {

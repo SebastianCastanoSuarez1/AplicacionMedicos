@@ -5,7 +5,6 @@ import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -17,7 +16,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 
 import db.MongoDB;
@@ -78,25 +76,6 @@ public class InformeRepositoryImpl implements InformeRepository {
 		return resultado;
 	}
 
-	public Boolean guardarInforme(Optional<Document> paciente, byte[] pdfBytes, String hora) {
-		try {
-			if (paciente.isPresent()) {
-				Document pdfInforme = new Document("pdf", new Binary(pdfBytes)).append("Hora_Creacion", hora);
-				Document filter = new Document("Dni_Paciente", paciente.get().getString("Dni_Paciente"));
-				Document update = new Document("$push", new Document("Informes", pdfInforme));
-
-				collection.updateOne(filter, update);
-
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public ArrayList<byte[]> verInformes(String medico) {
 		Bson filter = Filters.eq("Dni_Paciente", medico);
@@ -116,57 +95,28 @@ public class InformeRepositoryImpl implements InformeRepository {
 
 		return informes;
 	}
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> findFechaCreacion(String medico) {
-	    Bson filter = eq("Dni_Paciente", medico);
-	    Document document = collection.find(filter).first();
+		Bson filter = eq("Dni_Paciente", medico);
+		Document document = collection.find(filter).first();
 
-	    if (document == null) {
-	        return new ArrayList<>();
-	    }
+		if (document == null) {
+			return new ArrayList<>();
+		}
 
-	    ArrayList<Document> informes = (ArrayList<Document>) document.get("Informes");
-	    ArrayList<String> fechas = new ArrayList<>();
+		ArrayList<Document> informes = (ArrayList<Document>) document.get("Informes");
+		ArrayList<String> fechas = new ArrayList<>();
 
-	    if (informes != null) {
-	        for (Document informe : informes) {
-	            if (informe.containsKey("Hora_Creacion")) {
-	                fechas.add(informe.getString("Hora_Creacion"));
-	            }
-	        }
-	    }
+		if (informes != null) {
+			for (Document informe : informes) {
+				if (informe.containsKey("Hora_Creacion")) {
+					fechas.add(informe.getString("Hora_Creacion"));
+				}
+			}
+		}
 
-	    return fechas;
+		return fechas;
 	}
-
-	@SuppressWarnings("unchecked")
-	public String[] guardaInformes(String paciente) {
-        Bson filter = eq("Dni_Paciente", paciente);
-        Document document = collection.find(filter).first();
-
-        List<Document> informes = (List<Document>) document.get("Informes");
-        List<String> informesStrings = informes.stream()
-                                               .map(doc -> doc.getString("Hora_Creacion"))
-                                               .collect(Collectors.toList());
-
-        return informesStrings.toArray(new String[0]);
-    }
-	
-	public Boolean eliminarInformePaciente(String paciente,  String valor) {
-		try {
-          
-            Document filter = new Document("Dni_Paciente", paciente);
-    
-            Document pullFilter = new Document("Hora_Creacion", valor);
-       
-            collection.updateOne(filter, Updates.pull("Informes", pullFilter));
-            
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-  
 
 }
