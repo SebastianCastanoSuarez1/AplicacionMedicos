@@ -61,6 +61,7 @@ public class VerEnfermedades extends JFrame {
 	}
 
 	public VerEnfermedades(String dni) {
+		setResizable(false);
 		VerEnfermedades.dni = dni;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 562, 550);

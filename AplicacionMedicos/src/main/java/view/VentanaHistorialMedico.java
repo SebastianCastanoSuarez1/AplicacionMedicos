@@ -50,6 +50,7 @@ public class VentanaHistorialMedico extends JFrame {
 	}
 
 	public VentanaHistorialMedico(String dni) {
+		setResizable(false);
 		VentanaHistorialMedico.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

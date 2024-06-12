@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -34,8 +35,16 @@ public class VentanaTarjetaMedica extends JFrame {
 	private Controller controller = new Controller();
 
 	public VentanaTarjetaMedica(String dni) {
+		setResizable(false);
 		VentanaTarjetaMedica.dni = dni;
-		this.medicamentos = controller.medicamentos(dni);
+		
+		// Manejo de excepciones al cargar los datos
+		try {
+			this.medicamentos = controller.medicamentos(dni);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Fallo al cargar datos", "Error", JOptionPane.ERROR_MESSAGE);
+			this.medicamentos = new String[0]; // Para evitar NullPointerException más adelante
+		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 696, 525);
@@ -82,7 +91,7 @@ public class VentanaTarjetaMedica extends JFrame {
 		scrollPane.setBounds(73, 199, 540, 200);
 		contentPane.add(scrollPane);
 
-		// Dynamically add JLabels for medications
+		// Agregar JLabels dinámicamente para los medicamentos
 		JPanel dynamicPanel = new JPanel();
 		dynamicPanel.setLayout(null);
 		scrollPane.setViewportView(dynamicPanel);

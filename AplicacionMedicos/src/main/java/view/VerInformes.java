@@ -65,6 +65,7 @@ public class VerInformes extends JFrame {
 	 * Create the frame.
 	 */
 	public VerInformes(String dni) {
+		setResizable(false);
 
 		VerInformes.dni = dni;
 

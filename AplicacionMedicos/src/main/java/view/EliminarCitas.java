@@ -44,6 +44,7 @@ public class EliminarCitas extends JFrame {
 	}
 
 	public EliminarCitas(String dni) {
+		setResizable(false);
 		EliminarCitas.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

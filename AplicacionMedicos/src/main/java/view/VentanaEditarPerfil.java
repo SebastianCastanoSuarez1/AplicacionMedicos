@@ -65,6 +65,7 @@ public class VentanaEditarPerfil extends JFrame {
 	}
 
 	public VentanaEditarPerfil(String dni) {
+		setResizable(false);
 		VentanaEditarPerfil.dni = dni;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 673, 557);
@@ -142,14 +143,14 @@ public class VentanaEditarPerfil extends JFrame {
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String password = new String(passwordField.getPassword());
-
+				String password1 = new String(passwordField_1.getPassword());
 				Document paciente = new Paciente().append("Dni", textFieldDni.getText())
 						.append("Nombre", textFieldNombre.getText()).append("Apellidos", textFieldApellidos.getText())
 						.append("Fecha_Nacimiento", textFieldFechaNacimiento.getText())
 						.append("Sexo", GendercomboBox.getSelectedItem().toString()).append("Contraseña", password)
 						.append("Altura", Integer.parseInt(textFieldAltura.getText()))
 						.append("Peso", Integer.parseInt(textFieldPeso.getText()));
-				if (controller.updateData(dni, paciente)) {
+				if (controller.updateData(dni, paciente) && password == password1) {
 					ventanaPrincipal = new VentanaPrincipal(dni);
 					ventanaPrincipal.setVisible(true);
 					dispose();

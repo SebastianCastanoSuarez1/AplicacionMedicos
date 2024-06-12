@@ -55,6 +55,7 @@ public class VerCitas extends JFrame {
 	 * Create the frame.
 	 */
 	public VerCitas(String dni) {
+		setResizable(false);
 		VerCitas.dni = dni;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

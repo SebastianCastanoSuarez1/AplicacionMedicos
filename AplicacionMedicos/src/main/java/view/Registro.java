@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.Optional;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -44,6 +45,7 @@ public class Registro extends JFrame {
 	private final Controller controller = new Controller();
 	private JLabel finalMesgLbl;
 	private Timer timer;
+	private Document sinContraseña;
 
 	/**
 	 * Launch the application.
@@ -65,9 +67,11 @@ public class Registro extends JFrame {
 	 * Create the frame.
 	 */
 	public Registro() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 601, 420);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -141,38 +145,46 @@ public class Registro extends JFrame {
 			private void anadirPaciente(ActionEvent e) {
 				if (btnNewButton == e.getSource()) {
 					Boolean anadido;
-					Document paciente = new Paciente().append("Dni", dniformated.getText())
-							.append("Nombre", nameTxtField.getText()).append("Apellidos", SurnameTxtField.getText())
-							.append("Fecha_Nacimiento", bodformated.getText())
-							.append("Sexo", GendercomboBox.getSelectedItem().toString())
-							.append("Contraseña", PasswdTxtField.getText());
-					Document sinContraseña = controller.findByDni(dniformated.getText()).get();
-					if (!controller.existdni(dniformated.getText())) {
-						anadido = controller.savePaciente(paciente);
-						if (anadido) {
-							JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente", "Confirmación",
-									JOptionPane.INFORMATION_MESSAGE);
-							volverIcioSesion();
-						} else {
-							mostrarMensaje("Tu cuenta no ha sido creada", Color.RED);
+					if (isValidDNI(dniformated.getText())) {
+						Document paciente = new Paciente().append("Dni", dniformated.getText())
+								.append("Nombre", nameTxtField.getText()).append("Apellidos", SurnameTxtField.getText())
+								.append("Fecha_Nacimiento", bodformated.getText())
+								.append("Sexo", GendercomboBox.getSelectedItem().toString())
+								.append("Contraseña", PasswdTxtField.getText());
+						Optional<Document> existe = controller.findByDni(dniformated.getText());
+						if (existe.isPresent()) {
+							sinContraseña = controller.findByDni(dniformated.getText()).get();
+
 						}
-					} else if (controller.existdni(dniformated.getText())
-							&& sinContraseña.getString("Contraseña") == null) {
-						Boolean addPassword = controller.actualizarContraseña(
-								controller.findByDni(dniformated.getText()), "Contraseña", PasswdTxtField.getText());
-						if (addPassword) {
-							JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente", "Confirmación",
-									JOptionPane.INFORMATION_MESSAGE);
-							volverIcioSesion();
+						if (!controller.existdni(dniformated.getText())) {
+							anadido = controller.savePaciente(paciente);
+							if (anadido) {
+								JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente",
+										"Confirmación", JOptionPane.INFORMATION_MESSAGE);
+								volverIcioSesion();
+							} else {
+								mostrarMensaje("Tu cuenta no ha sido creada", Color.RED);
+							}
+						} else if (controller.existdni(dniformated.getText())
+								&& sinContraseña.getString("Contraseña") == null) {
+							Boolean addPassword = controller.actualizarContraseña(
+									controller.findByDni(dniformated.getText()), "Contraseña",
+									PasswdTxtField.getText());
+							if (addPassword) {
+								JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente",
+										"Confirmación", JOptionPane.INFORMATION_MESSAGE);
+								volverIcioSesion();
+							}
+
+						} else {
+							mostrarMensaje("Este dni ya existe", Color.RED);
 						}
 
 					} else {
-						mostrarMensaje("Este dni ya existe", Color.RED);
+						mostrarMensaje("Este dni no es valido", Color.RED);
 					}
 				}
 			}
-
-	
 
 			private void mostrarMensaje(String mensaje, Color color) {
 				finalMesgLbl.setText(mensaje);
@@ -234,17 +246,44 @@ public class Registro extends JFrame {
 		dniformated.addActionListener(new TextFieldListener());
 		GendercomboBox.addActionListener(new TextFieldListener());
 	}
+
+	public static boolean isValidDNI(String dni) {
+		// Verificar que el DNI tenga exactamente 9 caracteres.
+		if (dni == null || dni.length() != 9) {
+			return false;
+		}
+
+		// Verificar que los primeros 8 caracteres sean números.
+		String numberPart = dni.substring(0, 8);
+		if (!numberPart.matches("\\d{8}")) {
+			return false;
+		}
+
+		// Verificar que el último carácter sea una letra.
+		char letter = dni.charAt(8);
+		if (!Character.isLetter(letter)) {
+			return false;
+		}
+
+		// Calcular la letra correcta.
+		String validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
+		int number = Integer.parseInt(numberPart);
+		char correctLetter = validLetters.charAt(number % 23);
+
+		// Comparar la letra calculada con la letra proporcionada (ignorando
+		// mayúsculas/minúsculas).
+		return Character.toUpperCase(letter) == correctLetter;
+	}
+
 	private void volverIcioSesion() {
 		dispose();
 		inicioSesion = new InicioSesion();
 		inicioSesion.setVisible(true);
 	}
-	// Clase interna para manejar los eventos de cambio de texto en los campos des
-	// texto y en el ComboBox
+
 	private class TextFieldListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// Verificar si todos los campos están completos
 			boolean allFieldsFilled = !SurnameTxtField.getText().isEmpty() && !nameTxtField.getText().isEmpty()
 					&& !PasswdTxtField.getText().isEmpty() && !bodformated.getText().isEmpty()
 					&& !dniformated.getText().isEmpty() && !GendercomboBox.getSelectedItem().toString().isEmpty();
@@ -253,4 +292,5 @@ public class Registro extends JFrame {
 			btnNewButton.setEnabled(allFieldsFilled);
 		}
 	}
+
 }

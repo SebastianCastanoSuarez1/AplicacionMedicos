@@ -67,6 +67,7 @@ public class ModificarCita extends JFrame {
 	}
 
 	public ModificarCita(String dni) {
+		setResizable(false);
 		ModificarCita.dni = dni;
 		initialize();
 	}

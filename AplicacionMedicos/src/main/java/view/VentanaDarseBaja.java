@@ -56,6 +56,7 @@ public class VentanaDarseBaja extends JFrame {
 	 * Create the dialog.
 	 */
 	public VentanaDarseBaja(String dni) {
+		setResizable(false);
 		VentanaDarseBaja.dni = dni;
 		setBounds(100, 100, 643, 502);
 		getContentPane().setLayout(new BorderLayout());

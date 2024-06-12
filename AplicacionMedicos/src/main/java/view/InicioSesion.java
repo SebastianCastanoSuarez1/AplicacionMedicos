@@ -4,10 +4,18 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 
 import javax.swing.JButton;
@@ -33,6 +41,7 @@ public class InicioSesion extends JFrame {
 	private VentanaPrincipal ventanaPrincipal;
 	private CambiarContrasena cambiarContrasena;
 	private final Controller controller = new Controller();
+	private JRadioButton RadioButtonsaveuserpasswd;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -48,6 +57,8 @@ public class InicioSesion extends JFrame {
 	}
 
 	public InicioSesion() {
+		setResizable(false);
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 456);
 		JPanel contentPane = new JPanel();
@@ -111,6 +122,16 @@ public class InicioSesion extends JFrame {
 			formattedDni.setBounds(200, 104, 200, 27);
 			contentPane.add(formattedDni);
 
+			RadioButtonsaveuserpasswd = new JRadioButton("Guardar usuario");
+			RadioButtonsaveuserpasswd.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+
+				}
+			});
+			RadioButtonsaveuserpasswd.setContentAreaFilled(false);
+			RadioButtonsaveuserpasswd.setBounds(200, 213, 121, 21);
+			contentPane.add(RadioButtonsaveuserpasswd);
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -147,6 +168,8 @@ public class InicioSesion extends JFrame {
 
 		formattedDni.addKeyListener(enterKeyListener);
 		passwordField.addKeyListener(enterKeyListener);
+		loadUserAndPassword();
+
 	}
 
 	private void iniciarSesion() {
@@ -154,6 +177,9 @@ public class InicioSesion extends JFrame {
 		String password = new String(passwordField.getPassword());
 
 		if (controller.existdni(username) && controller.authenticateUser(username, password)) {
+			if (RadioButtonsaveuserpasswd.isSelected()) {
+				saveUserAndPassword(username, password);
+			}
 			ventanaPrincipal = new VentanaPrincipal(username);
 			ventanaPrincipal.setVisible(true);
 			dispose();
@@ -162,6 +188,36 @@ public class InicioSesion extends JFrame {
 					"El usuario " + username + " existe pero la contraseña es incorrecta");
 		} else {
 			JOptionPane.showMessageDialog(InicioSesion.this, "El usuario " + username + " no existe");
+		}
+	}
+
+	private void saveUserAndPassword(String username, String password) {
+		try (BufferedWriter writer = new BufferedWriter(
+				new FileWriter("src/main/resources/user_credentials.txt", false))) {
+			writer.write("Usuario: " + username + ", Contraseña: " + password);
+			writer.newLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadUserAndPassword() {
+		File file = new File("src/main/resources/user_credentials.txt");
+		if (file.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String line = reader.readLine();
+				if (line != null && !line.trim().isEmpty()) {
+					String[] parts = line.split(", ");
+					if (parts.length == 2) {
+						String username = parts[0].split(": ")[1];
+						String password = parts[1].split(": ")[1];
+						formattedDni.setText(username);
+						passwordField.setText(password);
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

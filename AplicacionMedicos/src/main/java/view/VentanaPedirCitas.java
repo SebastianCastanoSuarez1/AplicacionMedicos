@@ -77,6 +77,7 @@ public class VentanaPedirCitas extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaPedirCitas(String dni) {
+		setResizable(false);
 		try {
 			VentanaPedirCitas.dni = dni;
 
