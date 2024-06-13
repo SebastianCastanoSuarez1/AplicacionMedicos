@@ -116,7 +116,7 @@ public class ModificarCita extends JFrame {
 
 		JLabel lblNewLabel_1 = new JLabel("Citas disponibles:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblNewLabel_1.setBounds(30, 326, 100, 13);
+		lblNewLabel_1.setBounds(30, 66, 100, 13);
 		contentPane.add(lblNewLabel_1);
 
 		btnAceptar = new JButton("Aceptar");
