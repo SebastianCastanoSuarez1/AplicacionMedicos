@@ -150,12 +150,10 @@ public class VentanaEditarPerfil extends JFrame {
 						.append("Sexo", GendercomboBox.getSelectedItem().toString()).append("Contraseña", password)
 						.append("Altura", Integer.parseInt(textFieldAltura.getText()))
 						.append("Peso", Integer.parseInt(textFieldPeso.getText()));
-				if (controller.updateData(dni, paciente) && password == password1) {
+				if (controller.updateData(dni, paciente)&&password.equals(password1)) {
 					ventanaPrincipal = new VentanaPrincipal(dni);
 					ventanaPrincipal.setVisible(true);
 					dispose();
-				} else {
-					lblUpdateStatus.setText("¡Error al actualizar!");
 				}
 			}
 		});

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import controller.MedicoController;
 
 public class EliminarCitas extends JFrame {
 
@@ -30,7 +32,10 @@ public class EliminarCitas extends JFrame {
 	static String dni;
 	private ArrayList<String> citas, dniMedicos;
 	private ArrayList<JCheckBox> checkBoxes;
+
+	private MedicoController medicoController = new MedicoController();
 	private Controller controller = new Controller();
+
 	private JLabel lblEliminarCitasCon;
 	private JLabel lblNewLabel;
 	private JScrollPane scrollPane;
@@ -80,6 +85,7 @@ public class EliminarCitas extends JFrame {
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					List<String> citaMedicoDevolver = new ArrayList<>();
 					int citasEliminadas = 0;
 					citas = controller.findbyCitas(dni);
 					for (int i = 0; i < checkBoxes.size(); i++) {
@@ -87,6 +93,10 @@ public class EliminarCitas extends JFrame {
 							String cita = citas.get(i);
 							String dniMedico = dniMedicos.get(i);
 							if (controller.eliminarCita(dni, dniMedico, cita)) {
+								citaMedicoDevolver.add(cita);
+								medicoController.abrirCitasPaciente(medicoController.findByDni(dniMedico),
+										citaMedicoDevolver);
+								citaMedicoDevolver.clear();
 								citasEliminadas++;
 							}
 						}
@@ -135,7 +145,6 @@ public class EliminarCitas extends JFrame {
 				volverAVentanaPrincipal(dni);
 			}
 
-
 			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
@@ -151,6 +160,7 @@ public class EliminarCitas extends JFrame {
 		ventanaPrincipal.setVisible(true);
 		dispose();
 	}
+
 	private void cargarDatos(JPanel panel) {
 		try {
 			citas = controller.findbyCitas(dni);
