@@ -134,12 +134,12 @@ public class ModificarCita extends JFrame {
 						try {
 							Boolean anadido = controller.modificarCita(dni, dniMedicoSeleccionado, selectedCita,
 									citaSeleccionada);
-							System.out.println("Actualización exitosa: " + anadido);
 
 							if (anadido) {
-								List<String> citaMedicoDevolver= new ArrayList<>();
+								List<String> citaMedicoDevolver = new ArrayList<>();
 								citaMedicoDevolver.add(selectedCita);
-								medicoController.abrirCitasPaciente(medicoController.findByDni(dniMedicoSeleccionado), citaMedicoDevolver);
+								medicoController.abrirCitasPaciente(medicoController.findByDni(dniMedicoSeleccionado),
+										citaMedicoDevolver);
 								lblMensaje.setText("Cita asignada al paciente con éxito");
 								lblMensaje.setForeground(Color.GREEN);
 								ventanaPrincipal = new VentanaPrincipal(dni);
