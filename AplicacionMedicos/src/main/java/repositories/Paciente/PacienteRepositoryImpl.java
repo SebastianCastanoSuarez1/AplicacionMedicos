@@ -138,7 +138,7 @@ public class PacienteRepositoryImpl implements PacienteRepository {
 	public String[] guardarMedicamentos(String paciente) {
 		Bson filter = eq(dni, paciente);
 		Document document = collection.find(filter).first();
-		List<String> medicamentos = (List<String>) document.get("Tarjeta_Medica");
+		List<String> medicamentos = (List<String>) document.get("Medicamentos");
 		return medicamentos.toArray(new String[0]);
 	}
 

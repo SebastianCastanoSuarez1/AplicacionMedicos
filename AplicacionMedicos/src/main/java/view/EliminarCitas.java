@@ -93,6 +93,7 @@ public class EliminarCitas extends JFrame {
 					}
 					JOptionPane.showMessageDialog(EliminarCitas.this, citasEliminadas + " citas eliminadas con éxito.");
 					cargarDatos((JPanel) scrollPane.getViewport().getView());
+					volverAVentanaPrincipal(dni);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(EliminarCitas.this, "Error al eliminar citas.");
@@ -131,10 +132,9 @@ public class EliminarCitas extends JFrame {
 		lblLogo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
-				ventanaPrincipal.setVisible(true);
-				dispose();
+				volverAVentanaPrincipal(dni);
 			}
+
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -146,6 +146,11 @@ public class EliminarCitas extends JFrame {
 		});
 	}
 
+	private void volverAVentanaPrincipal(String dni) {
+		VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(dni);
+		ventanaPrincipal.setVisible(true);
+		dispose();
+	}
 	private void cargarDatos(JPanel panel) {
 		try {
 			citas = controller.findbyCitas(dni);
