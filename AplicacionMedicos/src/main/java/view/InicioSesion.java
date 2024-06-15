@@ -131,6 +131,11 @@ public class InicioSesion extends JFrame {
 			RadioButtonsaveuserpasswd.setContentAreaFilled(false);
 			RadioButtonsaveuserpasswd.setBounds(200, 213, 121, 21);
 			contentPane.add(RadioButtonsaveuserpasswd);
+			
+			JLabel lblNewLabel = new JLabel("Pacientes Hospital la Paloma");
+			lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+			lblNewLabel.setBounds(100, 47, 268, 21);
+			contentPane.add(lblNewLabel);
 
 		} catch (ParseException e) {
 			e.printStackTrace();
